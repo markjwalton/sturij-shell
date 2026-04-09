@@ -147,9 +147,6 @@ export default function App() {
               </div>
             </div>
 
-            <div className="border-t">
-              <ChatInput onSendMessage={handleSendMessage} />
-            </div>
           </main>
 
           {/* Right artifact panel */}
@@ -159,6 +156,10 @@ export default function App() {
             isCollapsed={isPanelCollapsed}
             onToggleCollapse={() => setIsPanelCollapsed(!isPanelCollapsed)}
           />
+        </div>
+
+        <div className="border-t shrink-0">
+          <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </div>
     </TooltipProvider>

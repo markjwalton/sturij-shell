@@ -1,5 +1,15 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ── Shell colour tokens ── */
+:root {
+  --shell-background:   #0a1628;
+  --shell-surface:      #1e2939;
+  --shell-border:       #364153;
+  --shell-accent:       #46ecd5;
+  --shell-text-primary: #d1d5dc;
+  --shell-text-muted:   #99a1af;
+}
+
 :root {
   --font-size: 16px;
   --background: #ffffff;

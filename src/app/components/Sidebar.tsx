@@ -26,29 +26,48 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
 
   return (
     <aside
-      className="border-r border-gray-200 dark:border-gray-800 flex flex-col bg-white dark:bg-gray-900 flex-shrink-0 transition-all duration-300"
-      style={{ width: isCollapsed ? '64px' : '240px' }}
+      style={{
+        width: isCollapsed ? '64px' : '240px',
+        background: 'var(--shell-surface)',
+        borderRight: '1px solid var(--shell-border)',
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'width 0.3s ease',
+      }}
     >
       {/* Navigation */}
-      <nav className="flex-1 p-2 pt-6 w-full overflow-hidden">
-        <div className={`space-y-2 ${isCollapsed ? 'flex flex-col items-center' : 'space-y-1 px-2'}`}>
+      <nav style={{ flex: 1, padding: '24px 8px 8px', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: isCollapsed ? 'center' : 'stretch' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
-            
+
             if (isCollapsed) {
               return (
                 <Tooltip key={item.label}>
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => onNavigate?.(item.label)}
-                      className={`
-                        w-12 h-12 flex items-center justify-center rounded-lg transition-all
-                        ${
-                          item.active
-                            ? 'text-white bg-teal-600 shadow-sm'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+                      style={{
+                        width: 48, height: 48,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: item.active ? 'var(--shell-accent)' : 'none',
+                        border: 'none', cursor: 'pointer',
+                        color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',
+                        transition: 'background 0.15s, color 0.15s',
+                      }}
+                      onMouseEnter={e => {
+                        if (!item.active) {
+                          (e.currentTarget as HTMLElement).style.background = 'var(--shell-border)';
+                          (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-primary)';
                         }
-                      `}
+                      }}
+                      onMouseLeave={e => {
+                        if (!item.active) {
+                          (e.currentTarget as HTMLElement).style.background = 'none';
+                          (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-muted)';
+                        }
+                      }}
                     >
                       <Icon className="w-5 h-5" />
                     </button>
@@ -57,26 +76,42 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                 </Tooltip>
               );
             }
-            
+
             return (
               <button
                 key={item.label}
                 onClick={() => onNavigate?.(item.label)}
-                className={`
-                  w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-all
-                  ${
-                    item.active
-                      ? 'text-white bg-teal-600 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+                style={{
+                  width: '100%',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '10px 16px',
+                  background: item.active ? 'var(--shell-accent)' : 'none',
+                  border: 'none', cursor: 'pointer',
+                  color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',
+                  fontWeight: item.active ? 600 : 400,
+                  fontSize: 14,
+                  textAlign: 'left',
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+                onMouseEnter={e => {
+                  if (!item.active) {
+                    (e.currentTarget as HTMLElement).style.background = 'var(--shell-border)';
+                    (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-primary)';
                   }
-                `}
+                }}
+                onMouseLeave={e => {
+                  if (!item.active) {
+                    (e.currentTarget as HTMLElement).style.background = 'none';
+                    (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-muted)';
+                  }
+                }}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
+                <Icon className="w-5 h-5" style={{ flexShrink: 0 }} />
                 <motion.span
                   initial={false}
                   animate={{ opacity: isCollapsed ? 0 : 1 }}
                   transition={{ duration: 0.2 }}
-                  className="whitespace-nowrap"
+                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {item.label}
                 </motion.span>

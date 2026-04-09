@@ -149,7 +149,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full shell-surface shell-border-b">
+    <><header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full shell-surface">
       {/* Sidebar Toggle + Logo */}
       <div className="flex items-center gap-3">
         <div className="flex items-center h-full">
@@ -467,5 +467,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
         </div>
       </div>
     </header>
+    <div className="shell-accent-rule" />
+    </>
   );
 }

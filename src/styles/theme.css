@@ -45,7 +45,7 @@
 .shell-accent-bg    { background: var(--shell-accent); color: var(--shell-background); }
 .shell-accent-dim   { background: var(--shell-accent-dim); border: 1px solid var(--shell-accent-faint); }
 .shell-hero-glow    { background: var(--shell-hero-gradient), var(--shell-background); }
-.shell-input-bar    { background: var(--shell-surface); border-top: 1px solid var(--shell-border); }
+.shell-input-bar    { background: var(--shell-surface); }
 .shell-input-field  { background: var(--shell-background); border: 1px solid var(--shell-border); }
 
 /* Icon colour — tinted, not bright white */
@@ -321,6 +321,14 @@
 @keyframes notificationPulse {
   0%, 100% { box-shadow: 0 0 4px 1px rgba(239, 68, 68, 0.4); }
   50% { box-shadow: 0 0 8px 3px rgba(239, 68, 68, 0.2); }
+}
+
+.shell-accent-rule {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, var(--shell-accent) 30%, var(--shell-accent) 70%, transparent 100%);
+  opacity: 0.4;
+  flex-shrink: 0;
 }
 
 .shell-panel-depth {

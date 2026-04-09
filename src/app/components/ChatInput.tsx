@@ -92,7 +92,9 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
   };
 
   return (
-    <div className="p-6 shell-input-bar">
+    <div className="shell-input-bar">
+      <div className="shell-accent-rule" />
+      <div className="p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all shell-input-field">
           <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -158,6 +160,7 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
             )}
           </Button>
         </div>
+      </div>
       </div>
     </div>
   );

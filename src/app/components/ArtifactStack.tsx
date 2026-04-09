@@ -101,7 +101,8 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
           initial={{ width: 420 }}
           animate={{ width: 64 }}
           transition={{ duration: 0.3 }}
-          className="border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex flex-col"
+          className="flex flex-col"
+          style={{ borderLeft: '1px solid var(--shell-border)', background: 'var(--shell-surface)' }}
         >
           {/* Collapsed Artifact Navigation */}
           <div className="flex-1 overflow-y-auto p-2 pt-6">
@@ -136,7 +137,8 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         initial={false}
         animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
-        className="border-l border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex flex-col relative"
+        className="flex flex-col relative"
+        style={{ borderLeft: '1px solid var(--shell-border)', background: 'var(--shell-surface)' }}
       >
         {/* Stacked Artifact Cards */}
         <div className="flex-1 overflow-y-auto p-4 pt-6">
@@ -151,9 +153,10 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                 onDragStart={(e) => handleDragStart(e, artifact.id)}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, artifact.id)}
-                className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-all hover:shadow-md ${
+                className={`rounded-lg shadow-sm transition-all hover:shadow-md ${
                   draggedCard === artifact.id ? 'opacity-50 scale-95' : 'opacity-100'
                 }`}
+                style={{ background: 'var(--shell-background)', border: '1px solid var(--shell-border)' }}
               >
                 {/* Card Header */}
                 <div className="p-3 flex items-center gap-3 cursor-move hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">

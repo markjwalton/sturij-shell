@@ -284,7 +284,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           </Tooltip>
           
           {showNotifications && (
-            <div className="absolute right-0 top-12 w-[420px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-[100] overflow-hidden">
+            <div className="fixed right-4 top-16 w-[420px] rounded-xl shadow-2xl z-[200] overflow-hidden" style={{ background: "var(--shell-surface)", border: "1px solid var(--shell-border)" }}>
               <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Notifications</h3>
@@ -425,7 +425,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           </Tooltip>
           
           {showSettingsMenu && (
-            <div className="absolute right-0 top-12 w-[680px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-2xl z-[100] overflow-hidden">
+            <div className="fixed right-4 top-16 w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden" style={{ background: "var(--shell-surface)", border: "1px solid var(--shell-border)" }}>
               <div className="p-6 border-b border-gray-200 dark:border-gray-800">
                 <h3 className="font-semibold text-lg text-gray-900 dark:text-white">System Settings</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Configure your workspace and tools</p>
@@ -593,7 +593,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           </button>
 
           {showUserMenu && (
-            <div className="absolute right-0 top-12 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl z-[100] overflow-hidden">
+            <div className="fixed right-4 top-16 w-56 rounded-xl shadow-xl z-[200] overflow-hidden" style={{ background: "var(--shell-surface)", border: "1px solid var(--shell-border)" }}>
               <div className="p-3 border-b border-gray-200 dark:border-gray-800">
                 <p className="font-medium text-gray-900 dark:text-white">{userName}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">user@sturij.ai</p>

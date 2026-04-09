@@ -183,7 +183,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
   };
 
   return (
-    <header className="h-16 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 bg-white dark:bg-gray-950 relative z-[110] w-full">
+    <header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full" style={{ background: 'var(--shell-surface)', borderBottom: '1px solid var(--shell-border)' }}>
       {/* Sidebar Toggle + Logo */}
       <div className="flex items-center gap-3">
         <Tooltip>
@@ -200,7 +200,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           <TooltipContent>{isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}</TooltipContent>
         </Tooltip>
         
-        <div className="text-gray-900 dark:text-white text-3xl font-bold">
+        <div className="text-3xl font-bold" style={{ color: 'var(--shell-text-primary)' }}>
           sturij
         </div>
       </div>

@@ -6,6 +6,8 @@
   --shell-surface:      #1e2939;
   --shell-border:       #364153;
   --shell-accent:       #46ecd5;
+  --shell-accent-dim:   rgba(70, 236, 213, 0.28);
+  --shell-accent-faint: rgba(70, 236, 213, 0.10);
   --shell-text-primary: #d1d5dc;
   --shell-text-muted:   #99a1af;
 }
@@ -16,6 +18,8 @@
   --shell-surface:      #171d18;
   --shell-border:       #2a352b;
   --shell-accent:       #d4a574;
+  --shell-accent-dim:   rgba(212, 165, 116, 0.28);
+  --shell-accent-faint: rgba(212, 165, 116, 0.10);
   --shell-text-primary: #f0ede6;
   --shell-text-muted:   #9fa89f;
 }

@@ -19,7 +19,8 @@ export function UserMessage({ message, timestamp, userInitials }: UserMessagePro
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="bg-gray-800/70 dark:bg-gray-700/70 text-white rounded-2xl px-6 py-4 mb-2 shadow-lg max-w-md backdrop-blur-sm"
+          className="rounded-2xl px-6 py-4 mb-2 shadow-lg max-w-md backdrop-blur-sm"
+          style={{ background: 'var(--shell-accent-dim)', border: '1px solid var(--shell-accent-faint)', color: 'var(--shell-text-primary)' }}
         >
           <div className="leading-relaxed">
             {message}
@@ -33,7 +34,8 @@ export function UserMessage({ message, timestamp, userInitials }: UserMessagePro
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
-        className="w-10 h-10 rounded-full bg-gray-900 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 shadow-md text-white font-semibold text-sm"
+        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md font-semibold text-sm"
+        style={{ background: 'var(--shell-accent)', color: 'var(--shell-background)' }}
       >
         {userInitials}
       </motion.div>

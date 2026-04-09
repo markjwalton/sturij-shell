@@ -19,12 +19,13 @@ export function ChatMessage({ message, timestamp, actions }: ChatMessageProps) {
         <Sparkles className="w-5 h-5 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="rounded-2xl p-5 shadow-sm" style={{ background: 'var(--shell-surface)', border: '1px solid var(--shell-border)' }}>
           <div
-            className="text-gray-900 dark:text-gray-100 leading-relaxed text-sm"
+            className="leading-relaxed text-sm"
+            style={{ color: 'var(--shell-text-primary)' }}
             dangerouslySetInnerHTML={{ __html: message }}
           />
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-3 flex items-center gap-2">
+          <div className="text-xs mt-3 flex items-center gap-2" style={{ color: 'var(--shell-text-muted)' }}>
             <span className="font-medium">Sturij AI</span>
             <span>·</span>
             <span>{timestamp}</span>

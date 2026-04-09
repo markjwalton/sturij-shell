@@ -94,7 +94,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-screen bg-white dark:bg-gray-950">
+      <div className="flex flex-col h-screen" style={{ background: 'var(--shell-background)', color: 'var(--shell-text-primary)' }}>
         <Header
           userName="Mark"
           userInitials="MW"
@@ -113,7 +113,7 @@ export default function App() {
             isCollapsed={isSidebarCollapsed}
           />
 
-          <main className="flex-1 flex flex-col relative overflow-hidden bg-white dark:bg-gray-950">
+          <main className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'var(--shell-background)' }}>
             <AnimatedBackground />
 
             <div className="flex-1 overflow-y-auto relative z-10">
@@ -139,7 +139,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-800">
+            <div className="border-t">
               <ChatInput onSendMessage={handleSendMessage} />
             </div>
           </main>

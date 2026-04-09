@@ -1,6 +1,6 @@
 @custom-variant dark (&:is(.dark *));
 
-/* ── Shell colour tokens ── */
+/* ── Shell colour tokens — DARK (navy/cyan, default) ── */
 :root {
   --shell-background:   #0a1628;
   --shell-surface:      #1e2939;
@@ -8,6 +8,16 @@
   --shell-accent:       #46ecd5;
   --shell-text-primary: #d1d5dc;
   --shell-text-muted:   #99a1af;
+}
+
+/* ── Shell colour tokens — LIGHT (sage/gold, TradeAI) ── */
+.light {
+  --shell-background:   #111614;
+  --shell-surface:      #171d18;
+  --shell-border:       #2a352b;
+  --shell-accent:       #d4a574;
+  --shell-text-primary: #f0ede6;
+  --shell-text-muted:   #9fa89f;
 }
 
 :root {

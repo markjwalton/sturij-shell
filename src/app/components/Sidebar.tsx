@@ -56,10 +56,9 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
           ) : (
             <button
               onClick={onToggle}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-accent-dim-text"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-accent-text"
             >
               <SidebarToggle isOpen={true} size={28} className="flex-shrink-0" />
-              <span className="shell-watermark-text">Hide</span>
             </button>
           )}
         </div>

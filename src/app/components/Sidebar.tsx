@@ -39,17 +39,39 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
       }}
     >
       {/* Collapse Toggle */}
-      <div className="flex justify-center py-3">
-        <button
-          onClick={onToggle}
-          className="w-full flex justify-center shell-icon shell-icon-btn py-3 border-none cursor-pointer bg-transparent"
-        >
-          <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={22} />
-        </button>
-      </div>
+      <nav style={{ flex: 1, padding: '8px 8px 8px', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: isCollapsed ? 'center' : 'stretch', marginBottom: 4 }}>
+          {isCollapsed ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onToggle}
+                  className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-icon shell-icon-btn"
+                >
+                  <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Expand</TooltipContent>
+            </Tooltip>
+          ) : (
+            <button
+              onClick={onToggle}
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-icon-btn shell-accent-text"
+            >
+              <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} className="flex-shrink-0" />
+              <motion.span
+                initial={false}
+                animate={{ opacity: isCollapsed ? 0 : 1 }}
+                transition={{ duration: 0.2 }}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                Collapse
+              </motion.span>
+            </button>
+          )}
+        </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: '8px 8px 8px', overflow: 'hidden' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: isCollapsed ? 'center' : 'stretch' }}>
           {navItems.map((item) => {
             const Icon = item.icon;

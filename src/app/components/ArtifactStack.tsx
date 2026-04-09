@@ -111,7 +111,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                 <Tooltip key={artifact.id}>
                   <TooltipTrigger asChild>
                     <button
-                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all shell-icon hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
                     >
                       {artifact.icon || <Layers className="w-5 h-5" />}
                     </button>
@@ -158,7 +158,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
               >
                 {/* Card Header */}
                 <div className="p-3 flex items-center gap-3 cursor-move hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                  <GripVertical className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                  <GripVertical className="w-4 h-4 shell-icon flex-shrink-0" />
                   <div className="flex-1 min-w-0 flex items-center gap-2">
                     {artifact.icon}
                     <h3 className="font-semibold text-sm text-gray-900 dark:text-white truncate">{artifact.title}</h3>

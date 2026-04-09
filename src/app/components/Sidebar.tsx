@@ -48,29 +48,13 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => onNavigate?.(item.label)}
-                      style={{
-                        width: 48, height: 48,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        borderRadius: 8,
-                        background: item.active ? 'var(--shell-accent)' : 'none',
-                        border: 'none', cursor: 'pointer',
-                        color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',
-                        transition: 'background 0.15s, color 0.15s',
-                      }}
-                      onMouseEnter={e => {
-                        if (!item.active) {
-                          (e.currentTarget as HTMLElement).style.background = 'var(--shell-border)';
-                          (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-primary)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (!item.active) {
-                          (e.currentTarget as HTMLElement).style.background = 'none';
-                          (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-muted)';
-                        }
-                      }}
+                      className={`w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all ${
+                        item.active
+                          ? 'shell-nav-active shell-nav-active-text'
+                          : 'shell-icon hover:bg-[var(--shell-border)]'
+                      }`}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-5 h-5" strokeWidth={1.5} />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="right">{item.label}</TooltipContent>
@@ -82,33 +66,13 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
               <button
                 key={item.label}
                 onClick={() => onNavigate?.(item.label)}
-                style={{
-                  width: '100%',
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '10px 16px',
-                  borderRadius: 8,
-                  background: item.active ? 'var(--shell-accent)' : 'none',
-                  border: 'none', cursor: 'pointer',
-                  color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',
-                  fontWeight: item.active ? 600 : 400,
-                  fontSize: 14,
-                  textAlign: 'left',
-                  transition: 'background 0.15s, color 0.15s',
-                }}
-                onMouseEnter={e => {
-                  if (!item.active) {
-                    (e.currentTarget as HTMLElement).style.background = 'var(--shell-border)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-primary)';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!item.active) {
-                    (e.currentTarget as HTMLElement).style.background = 'none';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--shell-text-muted)';
-                  }
-                }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all ${
+                  item.active
+                    ? 'shell-nav-active shell-nav-active-text font-semibold'
+                    : 'shell-icon font-normal hover:bg-[var(--shell-border)]'
+                }`}
               >
-                <Icon className="w-5 h-5" style={{ flexShrink: 0 }} />
+                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                 <motion.span
                   initial={false}
                   animate={{ opacity: isCollapsed ? 0 : 1 }}

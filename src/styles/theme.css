@@ -10,6 +10,7 @@
   --shell-accent-faint: rgba(70, 236, 213, 0.10);
   --shell-text-primary: #d1d5dc;
   --shell-text-muted:   #99a1af;
+  --shell-icon:         rgba(209, 213, 220, 0.7);
 
   /* Gradients — navy/cyan */
   --shell-hero-gradient: radial-gradient(ellipse at 60% 40%, rgba(70,236,213,0.08) 0%, transparent 60%);
@@ -25,6 +26,7 @@
   --shell-accent-faint: rgba(212, 165, 116, 0.10);
   --shell-text-primary: #f0ede6;
   --shell-text-muted:   #9fa89f;
+  --shell-icon:         rgba(240, 237, 230, 0.7);
 
   /* Gradients — sage/gold (from TradeAI landing) */
   --shell-hero-gradient: radial-gradient(ellipse at 60% 40%, rgba(74,93,78,0.15) 0%, transparent 60%);
@@ -45,6 +47,15 @@
 .shell-hero-glow    { background: var(--shell-hero-gradient), var(--shell-background); }
 .shell-input-bar    { background: var(--shell-surface); border-top: 1px solid var(--shell-border); }
 .shell-input-field  { background: var(--shell-background); border: 1px solid var(--shell-border); }
+
+/* Icon colour — tinted, not bright white */
+.shell-icon          { color: var(--shell-icon); }
+.shell-icon-btn      { color: var(--shell-icon); transition: color 0.15s; }
+.shell-icon-btn:hover { color: var(--shell-accent); }
+
+/* Nav active state */
+.shell-nav-active      { background: var(--shell-accent-faint); border-left: 2px solid var(--shell-accent); }
+.shell-nav-active-text { color: var(--shell-accent); }
 
 :root {
   --font-size: 16px;

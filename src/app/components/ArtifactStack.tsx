@@ -1,6 +1,7 @@
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronUp, GripVertical, Minimize2, Maximize2, Layers } from 'lucide-react';
+import { GripVertical, Layers } from 'lucide-react';
+import { DrawerOpenDown, DrawerCloseUp } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
@@ -80,7 +81,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
 
     const handleDrop = (e: React.DragEvent, targetCardId: string) => {
       e.preventDefault();
-      
+
       if (!draggedCard || draggedCard === targetCardId) return;
 
       const draggedIndex = artifacts.findIndex(card => card.id === draggedCard);
@@ -164,7 +165,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {artifact.badge && (
-                      <Badge 
+                      <Badge
                         className={`text-xs ${artifact.badgeColor || 'bg-blue-100 text-blue-700'}`}
                       >
                         {artifact.badge}
@@ -177,9 +178,9 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                       className="h-7 w-7 hover:bg-gray-200 dark:hover:bg-gray-700 flex-shrink-0"
                     >
                       {artifact.isExpanded ? (
-                        <ChevronUp className="w-4 h-4" />
-                      ) : (
-                        <ChevronDown className="w-4 h-4" />
+                        <DrawerCloseUp size={14} />
+                                              ) : (
+                        <DrawerOpenDown size={14} />
                       )}
                     </Button>
                   </div>

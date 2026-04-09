@@ -1,3 +1,48 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* ── TradeAI Light Theme (sage green) ── */
+:root {
+  --tai-sage:    #4a5d4e;
+  --tai-sage-l:  #6b9970;
+  --tai-gold:    #d4a574;
+  --tai-bg:      #f5f7f5;
+  --tai-bg2:     #eef1ee;
+  --tai-border:  #d0dbd1;
+  --tai-white:   #1a2b1c;
+  --tai-white-d: #4a5d4e;
+}
+
+/* Light mode overrides */
+html:not(.dark) body {
+  background-color: var(--tai-bg) !important;
+}
+
+html:not(.dark) .bg-white {
+  background-color: var(--tai-bg2) !important;
+}
+
+html:not(.dark) header {
+  background-color: rgba(74, 93, 78, 0.95) !important;
+  border-color: rgba(74, 93, 78, 0.3) !important;
+}
+
+html:not(.dark) header .text-gray-900,
+html:not(.dark) header .text-white {
+  color: #f0ede6 !important;
+}
+
+html:not(.dark) aside {
+  background-color: #3d4f40 !important;
+  border-color: rgba(74, 93, 78, 0.4) !important;
+}
+
+html:not(.dark) aside button.text-gray-300 {
+  color: #c8d5c9 !important;
+}
+
+html:not(.dark) aside button.bg-teal-600 {
+  background-color: var(--tai-gold) !important;
+  color: #1a1a1a !important;
+}

@@ -10,10 +10,17 @@
   --shell-accent-faint: rgba(70, 236, 213, 0.10);
   --shell-text-primary: #d1d5dc;
   --shell-text-muted:   #99a1af;
+
+  /* Gradients — navy/cyan */
+  --shell-hero-gradient:    radial-gradient(ellipse at 60% 40%, rgba(70,236,213,0.08) 0%, transparent 60%);
+  --shell-section-gradient: linear-gradient(135deg, rgba(70,236,213,0.06) 0%, transparent 50%);
+  --shell-rule-gradient:    linear-gradient(90deg, transparent, rgba(70,236,213,0.4), transparent);
+  --shell-line-gradient:    linear-gradient(to bottom, #46ecd5, rgba(70,236,213,0.3), transparent);
+  --shell-card-gradient:    linear-gradient(90deg, #364153, #46ecd5);
 }
 
-/* ── Shell colour tokens — LIGHT (sage/gold, TradeAI) ── */
-.light {
+/* ── Shell colour tokens — GREEN (sage/gold, TradeAI) ── */
+.theme-green {
   --shell-background:   #111614;
   --shell-surface:      #171d18;
   --shell-border:       #2a352b;
@@ -22,6 +29,13 @@
   --shell-accent-faint: rgba(212, 165, 116, 0.10);
   --shell-text-primary: #f0ede6;
   --shell-text-muted:   #9fa89f;
+
+  /* Gradients — sage/gold (from TradeAI landing) */
+  --shell-hero-gradient:    radial-gradient(ellipse at 60% 40%, rgba(74,93,78,0.15) 0%, transparent 60%);
+  --shell-section-gradient: linear-gradient(135deg, rgba(74,93,78,0.15) 0%, transparent 50%);
+  --shell-rule-gradient:    linear-gradient(90deg, transparent, #8a6644, transparent);
+  --shell-line-gradient:    linear-gradient(to bottom, #4a5d4e, #d4a574, #6b9970);
+  --shell-card-gradient:    linear-gradient(90deg, #4a5d4e, #d4a574);
 }
 
 :root {

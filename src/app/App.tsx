@@ -113,7 +113,7 @@ export default function App() {
             isCollapsed={isSidebarCollapsed}
           />
 
-          <main className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'var(--shell-background)' }}>
+          <main className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'var(--shell-hero-gradient), var(--shell-background)' }}>
             <AnimatedBackground />
 
             <div className="flex-1 overflow-y-auto relative z-10">

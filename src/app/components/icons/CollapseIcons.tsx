@@ -140,11 +140,12 @@ interface SidebarToggleProps {
 export function SidebarToggle({ isOpen, className, size = 28 }: SidebarToggleProps) {
   const [hovered, setHovered] = React.useState(false);
 
+  // Chevron bounces toward its action direction on hover
+  // Open = chevron points left (to close), nudges further left on hover
+  // Closed = chevron points right (to open), nudges further right on hover
   const chevronX = isOpen
-    ? hovered ? -3 : 0
-    : hovered ? 3 : 0;
-
-  const chevronRotation = isOpen ? 180 : 0;
+    ? hovered ? -4 : 0
+    : hovered ? 4 : 0;
 
   return (
     <motion.svg
@@ -157,27 +158,29 @@ export function SidebarToggle({ isOpen, className, size = 28 }: SidebarTogglePro
       onHoverEnd={() => setHovered(false)}
       style={{ color: 'var(--shell-accent)' }}
     >
+      {/* Vertical rail — left-aligned, thick enough to be visible, breathing pulse */}
       <motion.line
-        x1="4" y1="4" x2="4" y2="24"
+        x1="4" y1="3" x2="4" y2="25"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeLinecap="round"
-        animate={{ opacity: [0.6, 1, 0.6] }}
+        animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
       />
+      {/* Chevron — right-aligned with nav icons, slides on hover */}
+      {/* Points right (→) when closed = expand. Points left (←) when open = collapse. */}
       <motion.g
-        animate={{ x: chevronX, rotate: chevronRotation }}
+        animate={{ x: chevronX }}
         transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-        style={{ transformOrigin: '16px 14px', transformBox: 'fill-box' as React.CSSProperties['transformBox'] }}
       >
         <motion.path
-          d="M12 8L18 14L12 20"
+          d={isOpen ? 'M18 8L12 14L18 20' : 'M10 8L16 14L10 20'}
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          animate={{ opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+          animate={{ opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
         />
       </motion.g>
     </motion.svg>

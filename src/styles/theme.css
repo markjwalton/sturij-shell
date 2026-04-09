@@ -273,4 +273,18 @@
   .dark *::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.25);
   }
+
+  .shell-suggestion {
+    background: transparent !important;
+    border: none;
+    color: var(--shell-text-muted);
+    cursor: pointer;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .shell-suggestion:hover {
+    color: var(--shell-accent);
+  }
 }

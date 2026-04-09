@@ -46,7 +46,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
               <TooltipTrigger asChild>
                 <button
                   onClick={onToggle}
-                  className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-icon shell-icon-btn"
+                  className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-accent-text shell-icon-btn"
                 >
                   <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} />
                 </button>

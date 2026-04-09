@@ -1,14 +1,259 @@
-import { useState, ReactNode } from 'react';
-import { X, MessageCircle, Home, Briefcase, Package, Settings, LogOut, Zap, Grid, Moon, Sun, Edit3, Navigation, Download, Share, RefreshCw, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Menu } from 'lucide-react';
-import { Button } from './ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
-import { ChatInput } from './ChatInput';
-import { ChatMessage } from './ChatMessage';
-import { UserMessage } from './UserMessage';
+/**
+ * MobileAppShell — Sturij Dark Operations UI
+ * Paradigm: Dark Operations UI (pl- token namespace)
+ *
+ * Prototype note: hardcoded hex values below are flagged scaffolding pending
+ * tokenisation to pl-* CSS custom properties. See sessionNotes L3.
+ * font-mono usage is a prototype exception — see sessionNotes L1.
+ * rounded-xl on chips/cards is a design-required prototype exception — sessionNotes P.
+ */
+
+import { useState, useRef, useEffect, ReactNode, cloneElement, isValidElement } from 'react';
+import {
+  Settings, LogOut, Moon, Sun, Sparkles,
+  AlignJustify, PenSquare, LayoutGrid, Paperclip, Send,
+  ChevronLeft, ChevronRight, X,
+  Home, Briefcase, Package, Layers, RefreshCw, Download, Share,
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Sheet, SheetContent } from './ui/sheet';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 const brandLogo = '';
 const watermarkLogo = '';
-import { cloneElement, isValidElement } from 'react';
+
+// ─── Prototype colour constants (pending tokenisation) ────────────────────────
+const C = {
+  bg:              '#091220',
+  surface:         '#0e1828',
+  card:            'rgba(13,26,46,0.92)',
+  cardBorderIdle:  'rgba(70,236,213,0.13)',
+  cardBorderOpen:  'rgba(70,236,213,0.30)',
+  teal:            '#46ecd5',
+  tealSolid:       '#0d9488',
+  tealDim:         'rgba(70,236,213,0.28)',
+  tealFaint:       'rgba(70,236,213,0.10)',
+  text:            '#d1d5dc',
+  muted:           '#99a1af',
+  vMuted:          '#6a7282',
+  aiBg:            '#1e2939',
+  aiBorder:        '#2d3748',
+  userBg:          'rgba(70,236,213,0.16)',
+  userBorder:      'rgba(70,236,213,0.40)',
+  redBg:           'rgba(185,50,60,0.30)',
+  redBorder:       'rgba(231,80,100,0.65)',
+} as const;
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+interface WorkflowButtonDef {
+  label: string;
+  color?: 'default' | 'teal' | 'blue' | 'red';
+}
+interface WorkflowStepDef {
+  number: number;
+  title: string;
+  buttons: WorkflowButtonDef[];
+}
+
+const BUTTON_DETAILS: Record<string, { heading: string; body: string }> = {
+  Schedule:    { heading: 'Schedule',        body: "View and select from today's job queue. Tap a scheduled run to load it directly into the nesting workspace." },
+  Customer:    { heading: 'Customer',        body: 'Search by customer name or account number. Matching orders and open quotes appear for quick selection.' },
+  Number:      { heading: 'Job Number',      body: 'Enter a job or work-order number to pull the exact project, including revision history and linked materials.' },
+  Description: { heading: 'Description',     body: 'Full specification text entered at order creation — finish, profile style, grain direction, and any custom notes.' },
+  Code:        { heading: 'Material Code',   body: 'Internal SKU mapped to the ERP catalogue. Confirms pricing tier, lead time, and available stock quantity.' },
+  Colour:      { heading: 'Colour',          body: "RAL / NCS reference matched to your supplier's board range. Verify against the live colour swatch library." },
+  Texture:     { heading: 'Texture',         body: 'Surface texture class — smooth, fine-grain, or embossed. Affects toolpath feed-rate and blade selection.' },
+  Thickness:   { heading: 'Thickness',       body: 'Board thickness in mm. Cross-check with cutter clearance settings before nesting to avoid Z-axis collisions.' },
+  Grain:       { heading: 'Grain Direction', body: 'Grain lock constraint: None, Vertical, Horizontal, or Match Previous Sheet. Locked grains reduce yield — confirm with customer.' },
+  Materials:   { heading: 'Materials',       body: 'Full BOM for this run — board species, edge banding, hardware, and any bespoke components pulled from stock.' },
+  Quality:     { heading: 'Quality Check',   body: 'QA flags raised during previous stages: surface defects, dimensional tolerances, and inspection sign-off status.' },
+  Status:      { heading: 'Job Status',      body: 'Current workflow state: Pending → Confirmed → In Production → QC → Dispatched. Update triggers ERP and notifies the shop floor.' },
+  Start:       { heading: 'Start Run',       body: 'Commits the nesting layout to the machine queue. A pre-start checklist must be completed and signed off before the CNC begins.' },
+  Issue:       { heading: 'Raise Issue',     body: 'Log a production issue — wrong material, machine fault, or design discrepancy. Issue is routed to the floor manager immediately.' },
+  Block:       { heading: 'Block Job',       body: 'Puts the job on hold and prevents it entering the machine queue. Add a reason; the customer and scheduler are automatically notified.' },
+};
+
+const WORKFLOW_STEPS: WorkflowStepDef[] = [
+  {
+    number: 1,
+    title: 'Enter or Select your project',
+    buttons: [{ label: 'Schedule' }, { label: 'Customer' }, { label: 'Number' }],
+  },
+  {
+    number: 2,
+    title: 'Review the project requirements',
+    buttons: [
+      { label: 'Description' }, { label: 'Code' }, { label: 'Colour' },
+      { label: 'Texture' }, { label: 'Thickness' }, { label: 'Grain' },
+    ],
+  },
+  {
+    number: 3,
+    title: 'Confirm materials and status',
+    buttons: [{ label: 'Materials' }, { label: 'Quality' }, { label: 'Status' }],
+  },
+  {
+    number: 4,
+    title: 'Project manufacture readiness',
+    buttons: [
+      { label: 'Start', color: 'teal' },
+      { label: 'Issue', color: 'blue' },
+      { label: 'Block', color: 'red' },
+    ],
+  },
+];
+
+const SUGGESTION_CHIPS = [
+  '# activity',
+  'Set up automation',
+  "Show today's pipeline",
+  'View schedule',
+  'Find customer',
+  'Material check',
+];
+
+// ─── WorkflowStepCard ─────────────────────────────────────────────────────────
+// Chips always visible. Detail panel accordions per chip click (layout animation).
+
+interface ActiveChip { step: number; label: string }
+
+interface WorkflowStepCardProps {
+  step: WorkflowStepDef;
+  isOpen: boolean;
+  onToggle: () => void;
+  activeChip: ActiveChip | null;
+  onChipClick: (stepNum: number, label: string) => void;
+}
+
+function WorkflowStepCard({ step, isOpen, onToggle, activeChip, onChipClick }: WorkflowStepCardProps) {
+  const chipBg = (color: string | undefined, isActive: boolean) => {
+    if (color === 'red')  return isActive ? 'rgba(185,50,60,0.55)' : C.redBg;
+    if (color === 'teal') return isActive ? 'rgba(0,200,180,0.40)' : 'rgba(0,188,168,0.14)';
+    if (color === 'blue') return isActive ? 'rgba(81,162,255,0.40)' : 'rgba(81,162,255,0.14)';
+    return isActive ? 'rgba(70,236,213,0.22)' : 'rgba(10,22,40,0.85)';
+  };
+  const chipBorder = (color: string | undefined) => {
+    if (color === 'red')  return C.redBorder;
+    if (color === 'teal') return 'rgba(0,213,190,0.65)';
+    if (color === 'blue') return 'rgba(81,162,255,0.65)';
+    return C.tealDim;
+  };
+
+  const activeLabel = activeChip?.step === step.number ? activeChip.label : null;
+  const detail = activeLabel ? BUTTON_DETAILS[activeLabel] : null;
+
+  return (
+    <motion.div
+      layout
+      className="mb-2 overflow-hidden"
+      style={{
+        background: isOpen ? C.card : 'rgba(13,26,46,0.70)',
+        border: `1px solid ${isOpen ? C.cardBorderOpen : C.cardBorderIdle}`,
+        borderRadius: '12px', // prototype exception — pending design system decision
+      }}
+      transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+    >
+      {/* Header — tap to open/close */}
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center gap-3 px-4 pt-3 pb-3 text-left"
+      >
+        <span
+          className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-mono text-xs"
+          style={{
+            background: isOpen ? 'rgba(0,213,190,0.18)' : C.tealFaint,
+            border: `1px solid ${isOpen ? 'rgba(70,236,213,0.55)' : 'rgba(70,236,213,0.22)'}`,
+            color: C.teal,
+          }}
+        >
+          {step.number}
+        </span>
+        <span
+          className="flex-1 font-mono text-xs tracking-wide leading-tight"
+          style={{ color: isOpen ? C.text : C.muted }}
+        >
+          {step.title}
+        </span>
+        <span
+          className="font-mono text-sm flex-shrink-0"
+          style={{ color: isOpen ? C.teal : C.vMuted, opacity: 0.8, lineHeight: 1 }}
+        >
+          {isOpen ? '×' : '+'}
+        </span>
+      </button>
+
+      {/* Chips + detail — only when open */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="chips"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.28 }}
+            style={{ overflow: 'hidden', borderTop: `1px solid ${C.tealFaint}` }}
+          >
+            <div className="px-4 pt-3 pb-3">
+              {/* Chips row */}
+              <div className="flex flex-wrap gap-2">
+                {step.buttons.map((btn) => {
+                  const isActive = activeLabel === btn.label;
+                  return (
+                    <motion.button
+                      key={btn.label}
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                      onClick={() => onChipClick(step.number, btn.label)}
+                      className="px-3 py-1.5 font-mono text-xs text-white"
+                      style={{
+                        background: chipBg(btn.color, isActive),
+                        border: `1px solid ${chipBorder(btn.color)}`,
+                        borderRadius: '8px', // prototype exception
+                        boxShadow: isActive ? `0 0 10px 1px ${chipBorder(btn.color)}44` : 'none',
+                      }}
+                    >
+                      {btn.label}
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              {/* Detail panel — layout animated */}
+              <motion.div layout>
+                <AnimatePresence mode="wait">
+                  {detail && (
+                    <motion.div
+                      key={activeLabel}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
+                      className="mt-3 px-3 py-2.5"
+                      style={{
+                        background: 'rgba(0,213,190,0.05)',
+                        border: `1px solid ${C.tealFaint}`,
+                        borderRadius: '8px', // prototype exception
+                      }}
+                    >
+                      <p className="font-mono text-[10px] tracking-widest mb-1.5" style={{ color: C.teal }}>
+                        {detail.heading}
+                      </p>
+                      <p className="font-mono text-xs leading-relaxed" style={{ color: C.muted }}>
+                        {detail.body}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+// ─── Message types ─────────────────────────────────────────────────────────────
 
 interface Message {
   id: string;
@@ -17,6 +262,8 @@ interface Message {
   timestamp: string;
 }
 
+// ─── Shell Props ───────────────────────────────────────────────────────────────
+
 interface MobileAppShellProps {
   children: ReactNode;
   navigationItems?: Array<{ label: string; icon: ReactNode; onClick: () => void }>;
@@ -24,684 +271,727 @@ interface MobileAppShellProps {
   title?: string;
   userInitials?: string;
   isLandscape?: boolean;
-  onToggleOrientation?: (isLandscape: boolean) => void;
-  artifactInfo?: {
-    title: string;
-    dimensions?: string;
-    stats?: Array<{ label: string; value: string }>;
-  };
-  currentSheetIndex?: number;
+  onToggleOrientation?: (v: boolean) => void;
+  artifactInfo?: { title: string; dimensions?: string; stats?: Array<{ label: string; value: string }> };
+  currentSheetIndex?: number | null;
   totalSheets?: number;
-  currentSheetData?: {
-    sheetNumber: number;
-    panelsCut: number;
-    totalPanels: number;
-  };
+  currentSheetData?: { sheetNumber: number; panelsCut: number; totalPanels: number };
   onPrevSheet?: () => void;
   onNextSheet?: () => void;
   artifactScale?: number;
-  onArtifactScaleChange?: (scale: number) => void;
+  onArtifactScaleChange?: (v: number) => void;
 }
 
-export function MobileAppShell({ 
-  children, 
+// ─── MobileAppShell ────────────────────────────────────────────────────────────
+
+export function MobileAppShell({
+  children,
   navigationItems = [],
-  actionItems = [],
-  title = "Sturij Intelligence",
-  userInitials = "MW",
+  userInitials = 'MW',
   isLandscape: externalIsLandscape,
   onToggleOrientation,
-  artifactInfo,
   currentSheetIndex,
   totalSheets,
   currentSheetData,
   onPrevSheet,
   onNextSheet,
   artifactScale,
-  onArtifactScaleChange
+  onArtifactScaleChange,
 }: MobileAppShellProps) {
-  const [isChatExpanded, setIsChatExpanded] = useState(false);
+  // ── state ──────────────────────────────────────────────────────────────────
+  // All steps open by default (matches the design)
+  const [openSteps, setOpenSteps] = useState<Set<number>>(new Set());
+  const [activeChip, setActiveChip] = useState<ActiveChip | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [isActionsOpen, setIsActionsOpen] = useState(false);
-  const [isTopDrawerOpen, setIsTopDrawerOpen] = useState(false);
-  const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isScaleControlOpen, setIsScaleControlOpen] = useState(false);
+  const [isAvatarOpen, setIsAvatarOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  // Job-loaded state
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [artifactRotation, setArtifactRotation] = useState(0);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'ai',
-      content: 'Welcome! I can help you optimize your panel layouts and manage your projects.',
-      timestamp: '09:15',
-    },
-  ]);
 
-  const handleSendMessage = (content: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      type: 'user',
-      content,
-      timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
-    };
-    setMessages([...messages, newMessage]);
-    
-    setTimeout(() => {
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: `I understand you want to know about "${content}". Let me help you with that...`,
-        timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // ── handlers ───────────────────────────────────────────────────────────────
+
+  const toggleStep = (n: number) => {
+    setOpenSteps(prev => {
+      const isCurrentlyOpen = prev.has(n);
+      // Close all, then open the tapped one (unless it was already open — close it)
+      return isCurrentlyOpen ? new Set() : new Set([n]);
+    });
+    // Clear active chip whenever the step changes
+    if (activeChip?.step !== n) setActiveChip(null);
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
+  const handleChipClick = (stepNum: number, label: string) => {
+    setActiveChip(prev =>
+      prev?.step === stepNum && prev.label === label ? null : { step: stepNum, label }
+    );
+  };
+
+  const handleSend = () => {
+    const text = inputValue.trim();
+    if (!text) return;
+    const ts = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    setMessages(prev => [...prev, { id: Date.now().toString(), type: 'user', content: text, timestamp: ts }]);
+    setInputValue('');
+    setTimeout(() => {
+      const aiTs = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: 'Search for a project?',
+        timestamp: aiTs,
+      }]);
+    }, 900);
+  };
+
+  const handleChipSend = (chip: string) => {
+    setInputValue(chip);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  };
+
+  const toggleDark = () => {
+    setIsDarkMode(d => !d);
     document.documentElement.classList.toggle('dark');
   };
 
-  return (
-    <div className="relative h-screen w-screen overflow-hidden font-mono">
-      {/* Textured Background Layer */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          backgroundColor: isDarkMode ? '#0a1628' : 'rgba(184, 180, 150, 0.5)',
-          backgroundImage: isDarkMode ? 'none' : `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E")`,
-        }}
-      />
-      
-      {/* Full-Screen Artifact - The Hero */}
-      <div 
-        className="absolute inset-0 overflow-hidden touch-none transition-transform duration-300 ease-out"
-        style={{ 
-          transform: `scale(${artifactScale || 0.65}) rotate(${artifactRotation}deg)`,
-          transformOrigin: 'center center'
-        }}
-      >
-        {isValidElement(children) ? cloneElement(children, { parentScale: artifactScale || 0.65, parentRotation: artifactRotation } as any) : children}
-      </div>
+  // ── shared chrome: top bar ─────────────────────────────────────────────────
 
-      {/* Centered Watermark - Subtle Branding */}
-      <div 
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none select-none"
-        style={{ width: '300px', height: '300px' }}
+  const TopBar = (
+    <header
+      className="relative z-50 flex-shrink-0 flex items-center px-4 bg-black"
+      style={{ height: 'var(--pl-footer-h)', borderBottom: `1px solid ${C.tealFaint}` }}
+    >
+      {/* Brand logo */}
+      <img src={brandLogo} alt="Sturij" className="h-7 object-contain" />
+
+      <span className="flex-1" />
+
+      {/* Settings cog */}
+      <button
+        className="w-9 h-9 flex items-center justify-center mr-1"
+        onClick={() => {}}
+        aria-label="Settings"
       >
-        <img 
-          src={watermarkLogo} 
-          alt="" 
-          className="w-full h-full object-contain opacity-[0.03] dark:opacity-[0.05]"
-          draggable={false}
+        <Settings
+          className="w-5 h-5"
+          style={{
+            color: C.tealSolid,
+            filter: 'drop-shadow(0 0 5px rgba(13,148,136,0.7)) drop-shadow(0 0 10px rgba(13,148,136,0.35))',
+            strokeWidth: 1.5,
+          }}
         />
-      </div>
+      </button>
 
-      {/* Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-[70] h-16 backdrop-blur-xl bg-black/80 dark:bg-black/80 border-b border-gray-700/50 dark:border-gray-600/50 shadow-sm">
-        <div className="flex items-center justify-between h-full px-4">
-          {/* Left: Menu + Title */}
-          <div className="flex items-center gap-3">
-            <img 
-              src={brandLogo} 
-              alt="Sturij Intelligence" 
-              className="h-8 object-contain"
-            />
-          </div>
-
-          {/* Settings Cog & Avatar */}
-          <div className="flex items-center gap-2">
-            {/* Settings Cog - Thin Stroke Glow */}
-            <button
-              onClick={() => setIsScaleControlOpen(!isScaleControlOpen)}
-              className="relative w-8 h-8 flex items-center justify-center group"
-              aria-label="Scale control"
-            >
-              <Settings 
-                className="w-5 h-5 stroke-[1.5] text-transparent stroke-teal-500 dark:stroke-teal-400 transition-all duration-300"
-                style={{
-                  filter: 'drop-shadow(0 0 4px rgba(20, 184, 166, 0.5)) drop-shadow(0 0 8px rgba(20, 184, 166, 0.3))',
-                  fill: 'none'
-                }}
-              />
-            </button>
-
-            {/* Avatar */}
-            <button
-              onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
-              className="relative"
-              aria-label="User menu"
-            >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-white text-xs font-semibold shadow-md hover:scale-105 transition-transform">
-                {userInitials}
-              </div>
-            </button>
-          </div>
-
-          {/* Avatar Dropdown Menu */}
-          {isAvatarMenuOpen && (
-            <>
-              <div 
-                className="fixed inset-0 z-30" 
-                onClick={() => setIsAvatarMenuOpen(false)}
-              />
-              <div className="absolute right-4 top-12 w-56 backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-[80]">
-                {/* User Info */}
-                <div className="px-4 py-3 border-b border-gray-200/50 dark:border-gray-700/50">
-                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">Mark Wilson</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">mark@example.com</div>
-                </div>
-
-                {/* Theme Toggle */}
-                <div className="py-2 border-b border-gray-200/50 dark:border-gray-700/50">
-                  <button 
-                    onClick={() => {
-                      toggleDarkMode();
-                      setIsAvatarMenuOpen(false);
-                    }}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 transition-colors text-left"
-                  >
-                    {isDarkMode ? (
-                      <Sun className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    ) : (
-                      <Moon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    )}
-                    <span className="text-sm text-gray-900 dark:text-gray-100">
-                      {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-                    </span>
-                  </button>
-                </div>
-
-                {/* User Functions */}
-                <div className="py-2">
-                  <button 
-                    onClick={() => {
-                      if (onToggleOrientation) {
-                        onToggleOrientation(!externalIsLandscape);
-                      }
-                      setIsAvatarMenuOpen(false);
-                    }}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 transition-colors text-left"
-                  >
-                    <RefreshCw className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    <span className="text-sm text-gray-900 dark:text-gray-100">Rotate View</span>
-                  </button>
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 transition-colors text-left">
-                    <Settings className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                    <span className="text-sm text-gray-900 dark:text-gray-100">Settings</span>
-                  </button>
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 hover:bg-red-50/50 dark:hover:bg-red-900/20 transition-colors text-left">
-                    <LogOut className="w-4 h-4 text-red-600 dark:text-red-400" />
-                    <span className="text-sm text-red-600 dark:text-red-400">Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Top Drawer Toggle - Pull down indicator */}
-      <button
-        onClick={() => setIsTopDrawerOpen(!isTopDrawerOpen)}
-        className="fixed top-16 left-1/2 -translate-x-1/2 z-[60] px-6 py-1.5 rounded-b-xl backdrop-blur-lg bg-white/70 dark:bg-gray-900/70 border-x border-b border-teal-400/40 dark:border-teal-500/40 shadow-lg hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all"
+      {/* Avatar */}
+      <motion.button
+        whileTap={{ scale: 0.92 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+        onClick={() => setIsAvatarOpen(v => !v)}
+        className="w-8 h-8 rounded-full flex items-center justify-center font-mono text-xs"
         style={{
-          borderTopWidth: '0',
-          borderLeftWidth: '1px',
-          borderRightWidth: '1px', 
-          borderBottomWidth: '2px'
+          border: `1.5px solid rgba(70,236,213,0.65)`,
+          background: C.surface,
+          color: C.teal,
         }}
-        aria-label="Toggle info drawer"
+        aria-label="User menu"
       >
-        {isTopDrawerOpen ? (
-          <ChevronUp className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-        ) : (
-          <ChevronDown className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-        )}
-      </button>
+        {userInitials}
+      </motion.button>
+    </header>
+  );
 
-      {/* Scale Control Panel - Slides down when active */}
-      <div 
-        className={`fixed top-16 left-1/2 -translate-x-1/2 z-[65] transition-all duration-300 ${
-          isScaleControlOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
-        onMouseLeave={() => setIsScaleControlOpen(false)}
-        onTouchEnd={() => setTimeout(() => setIsScaleControlOpen(false), 3000)}
+  // ── shared chrome: subtitle bar ────────────────────────────────────────────
+
+  const SubtitleBar = (
+    <div
+      className="relative z-40 flex-shrink-0 flex items-center px-2 bg-black"
+      style={{ height: '40px', borderBottom: `1px solid ${C.tealFaint}` }}
+    >
+      {/* Hamburger — opens left nav drawer */}
+      <motion.button
+        whileTap={{ scale: 0.88 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+        onClick={() => setIsNavOpen(true)}
+        className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+        aria-label="Navigation"
       >
-        <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 w-72">
-          <div className="space-y-4">
-            {/* Scale Section */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Scale</span>
-                <span className="text-xs font-mono text-teal-600 dark:text-teal-400">{Math.round((artifactScale || 0.65) * 100)}%</span>
-              </div>
-              
-              {/* Scale Slider */}
-              <div className="relative">
-                <input
-                  type="range"
-                  min="0.5"
-                  max="2"
-                  step="0.05"
-                  value={artifactScale || 0.65}
-                  onChange={(e) => {
-                    const newScale = parseFloat(e.target.value);
-                    onArtifactScaleChange?.(newScale);
-                  }}
-                  className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
-                  style={{
-                    background: `linear-gradient(to right, rgb(20 184 166) 0%, rgb(20 184 166) ${((artifactScale || 0.65) - 0.5) * 100}%, rgb(229 231 235) ${((artifactScale || 0.65) - 0.5) * 100}%, rgb(229 231 235) 100%)`
-                  }}
-                />
-              </div>
+        <AlignJustify className="w-4 h-4" style={{ color: C.muted }} />
+      </motion.button>
 
-              {/* Scale Quick Presets */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => onArtifactScaleChange?.(0.5)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  50%
-                </button>
-                <button
-                  onClick={() => onArtifactScaleChange?.(1)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  100%
-                </button>
-                <button
-                  onClick={() => onArtifactScaleChange?.(1.5)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  150%
-                </button>
-                <button
-                  onClick={() => onArtifactScaleChange?.(2)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  200%
-                </button>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="border-t border-gray-200/50 dark:border-gray-700/50"></div>
-
-            {/* Rotation Section */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Rotation</span>
-                <span className="text-xs font-mono text-teal-600 dark:text-teal-400">{artifactRotation}°</span>
-              </div>
-              
-              {/* Rotation Slider */}
-              <div className="relative">
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="5"
-                  value={artifactRotation}
-                  onChange={(e) => setArtifactRotation(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
-                />
-              </div>
-
-              {/* Rotation Quick Presets */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setArtifactRotation(-90)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  -90°
-                </button>
-                <button
-                  onClick={() => setArtifactRotation(0)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  0°
-                </button>
-                <button
-                  onClick={() => setArtifactRotation(90)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  90°
-                </button>
-                <button
-                  onClick={() => setArtifactRotation(180)}
-                  className="flex-1 px-2 py-1 text-xs rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-teal-50 dark:hover:bg-teal-900/30 text-gray-700 dark:text-gray-300 transition-colors"
-                >
-                  180°
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Breadcrumb */}
+      <div className="flex-1 flex items-center justify-center gap-1.5 min-w-0">
+        <span
+          className="font-mono text-[11px] tracking-widest truncate"
+          style={{ color: C.muted }}
+        >
+          CNC Nesting Assistant
+        </span>
+        <span className="font-mono text-[11px] tracking-widest flex-shrink-0" style={{ color: C.teal }}>
+          / Operator
+        </span>
       </div>
 
-      {/* Top Drawer - Info & Stats Only */}
-      {isTopDrawerOpen && (
-        <div className="fixed top-16 left-0 right-0 z-[55] backdrop-blur-2xl bg-white/10 dark:bg-gray-900/10 border-b border-gray-200/50 dark:border-gray-800/50 shadow-xl">
-          <div className="px-6 py-4 max-w-2xl mx-auto">
-            {/* Artifact Info */}
-            {artifactInfo && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {artifactInfo.title}
-                  </h3>
-                  {artifactInfo.dimensions && (
-                    <span className="text-sm text-teal-600 dark:text-teal-400 font-medium">
-                      {artifactInfo.dimensions}
-                    </span>
-                  )}
-                </div>
-                
-                {/* Stats Grid */}
-                {artifactInfo.stats && artifactInfo.stats.length > 0 && (
-                  <div className="grid grid-cols-2 gap-3 mt-4">
-                    {artifactInfo.stats.map((stat, index) => (
-                      <div key={index} className="p-3 rounded-lg backdrop-blur-sm bg-white/60 dark:bg-gray-800/60 border border-gray-200/50 dark:border-gray-700/50">
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</div>
-                        <div className="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-1">{stat.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Side Drawer Tab - Left: Navigation (Blue) - Vertical */}
-      <button
-        onClick={() => setIsNavOpen(!isNavOpen)}
-        className="fixed left-0 top-1/2 -translate-y-1/2 z-40 py-6 px-1.5 rounded-r-xl backdrop-blur-lg bg-blue-500/20 dark:bg-blue-600/20 border-y border-r border-blue-300/30 dark:border-blue-400/30 shadow-lg hover:bg-blue-500/30 dark:hover:bg-blue-600/30 transition-all"
-        aria-label="Toggle navigation"
+      {/* Edit icon — right action */}
+      <motion.button
+        whileTap={{ scale: 0.88 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+        onClick={() => {
+          setMessages([]);
+          setInputValue('');
+        }}
+        className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+        aria-label="New session"
       >
-        {isNavOpen ? (
-          <ChevronLeft className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-        ) : (
-          <ChevronRight className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-        )}
-      </button>
+        <PenSquare className="w-4 h-4" style={{ color: C.muted }} />
+      </motion.button>
+    </div>
+  );
 
-      {/* Side Drawer Tab - Right: Actions (Purple) - Vertical */}
-      <button
-        onClick={() => setIsActionsOpen(!isActionsOpen)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 py-6 px-1.5 rounded-l-xl backdrop-blur-lg bg-purple-500/20 dark:bg-purple-600/20 border-y border-l border-purple-300/30 dark:border-purple-400/30 shadow-lg hover:bg-purple-500/30 dark:hover:bg-purple-600/30 transition-all"
-        aria-label="Toggle actions"
-      >
-        {isActionsOpen ? (
-          <ChevronRight className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-        ) : (
-          <ChevronLeft className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-        )}
-      </button>
+  // ── Avatar menu ────────────────────────────────────────────────────────────
 
-      {/* Bottom Drawer Tab - Center: Chat (Teal) */}
-      <button
-        onClick={() => setIsChatExpanded(!isChatExpanded)}
-        className="fixed bottom-14 left-1/2 -translate-x-1/2 z-40 px-4 py-1.5 rounded-t-xl backdrop-blur-lg bg-teal-500/20 dark:bg-teal-600/20 border-x border-t border-teal-300/30 dark:border-teal-400/30 shadow-lg hover:bg-teal-500/30 dark:hover:bg-teal-600/30 transition-all flex items-center gap-2"
-        aria-label="Toggle chat"
-      >
-        {isChatExpanded ? (
-          <ChevronDown className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-        ) : (
-          <ChevronUp className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-        )}
-        {messages.length > 0 && (
-          <span className="min-w-[18px] h-5 px-1.5 bg-red-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
-            {messages.length}
-          </span>
-        )}
-      </button>
-
-      {/* Navigation Drawer - Left Side */}
-      <Sheet open={isNavOpen} onOpenChange={setIsNavOpen}>
-        <SheetContent 
-          side="left" 
-          className="w-[80px] backdrop-blur-xl bg-white/10 dark:bg-gray-900/10 border-r border-gray-200/20 dark:border-gray-700/20 top-16 bottom-14"
-          style={{ height: 'calc(100vh - 120px)' }}
-          overlayClassName="bg-transparent"
-          showClose={false}
-        >
-          <div className="mt-6 space-y-3 flex flex-col items-center">
-            {navigationItems.length > 0 ? (
-              navigationItems.map((item, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        item.onClick();
-                        setIsNavOpen(false);
-                      }}
-                      className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-teal-50/70 dark:hover:bg-teal-900/30 transition-colors text-teal-600 dark:text-teal-400"
-                    >
-                      {item.icon}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">{item.label}</TooltipContent>
-                </Tooltip>
-              ))
-            ) : (
-              <>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-teal-50/70 dark:hover:bg-teal-900/30 transition-colors text-teal-600 dark:text-teal-400">
-                      <Home className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Home</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-teal-50/70 dark:hover:bg-teal-900/30 transition-colors text-teal-600 dark:text-teal-400">
-                      <Briefcase className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Jobs</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-teal-50/70 dark:hover:bg-teal-900/30 transition-colors text-teal-600 dark:text-teal-400">
-                      <Package className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Materials</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-teal-50/70 dark:hover:bg-teal-900/30 transition-colors text-teal-600 dark:text-teal-400">
-                      <Grid className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">Artifacts</TooltipContent>
-                </Tooltip>
-              </>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      {/* Actions Drawer - Right Side */}
-      <Sheet open={isActionsOpen} onOpenChange={setIsActionsOpen}>
-        <SheetContent 
-          side="right" 
-          className="w-[80px] backdrop-blur-xl bg-white/10 dark:bg-gray-900/10 border-l border-gray-200/20 dark:border-gray-700/20 top-16 bottom-14"
-          style={{ height: 'calc(100vh - 120px)' }}
-          overlayClassName="bg-transparent"
-          showClose={false}
-        >
-          <div className="mt-6 space-y-3 flex flex-col items-center">
-            {actionItems.length > 0 ? (
-              actionItems.map((item, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        item.onClick();
-                        setIsActionsOpen(false);
-                      }}
-                      className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-purple-50/70 dark:hover:bg-purple-900/30 transition-colors text-purple-600 dark:text-purple-400"
-                    >
-                      {item.icon}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">{item.label}</TooltipContent>
-                </Tooltip>
-              ))
-            ) : (
-              <>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-purple-50/70 dark:hover:bg-purple-900/30 transition-colors text-purple-600 dark:text-purple-400">
-                      <Download className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Export Sheet Data</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-purple-50/70 dark:hover:bg-purple-900/30 transition-colors text-purple-600 dark:text-purple-400">
-                      <RefreshCw className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Optimize Layout</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button className="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-purple-50/70 dark:hover:bg-purple-900/30 transition-colors text-purple-600 dark:text-purple-400">
-                      <Share className="w-6 h-6" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">Share Job</TooltipContent>
-                </Tooltip>
-              </>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      {/* Expanded Chat Panel - Slides up from bottom */}
-      {isChatExpanded && (
-        <div
-          className="fixed left-0 right-0 z-50 backdrop-blur-2xl bg-white/10 dark:bg-gray-900/10 border-t border-gray-200/50 dark:border-gray-800/50 shadow-2xl"
-          style={{ bottom: '56px', height: '45vh', maxHeight: '50vh' }}
-        >
-          {/* Chat Header */}
-          <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200/50 dark:border-gray-800/50">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center shadow-md">
-                <MessageCircle className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <div className="text-xs font-semibold text-gray-900 dark:text-gray-100">AI Assistant</div>
-                <div className="text-[9px] text-teal-600 dark:text-teal-400">Online</div>
-              </div>
+  const AvatarMenu = (
+    <AnimatePresence>
+      {isAvatarOpen && (
+        <>
+          <div className="fixed inset-0 z-[60]" onClick={() => setIsAvatarOpen(false)} />
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.2 }}
+            className="fixed right-3 z-[70] w-56 overflow-hidden"
+            style={{
+              top: 'calc(var(--pl-footer-h) + 4px)',
+              background: C.surface,
+              border: `1px solid ${C.tealFaint}`,
+              borderRadius: '0', // square corners — Design Constitution §5.1
+            }}
+          >
+            <div className="px-4 py-3" style={{ borderBottom: `1px solid ${C.tealFaint}` }}>
+              <p className="font-mono text-xs" style={{ color: C.text }}>Mark Wilson</p>
+              <p className="font-mono text-[10px]" style={{ color: C.vMuted }}>mark@example.com</p>
             </div>
-            <button 
-              onClick={() => setIsChatExpanded(false)}
-              className="p-1.5 rounded-lg hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors"
-            >
-              <X className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </button>
-          </div>
+            <div className="py-1" style={{ borderBottom: `1px solid ${C.tealFaint}` }}>
+              <button
+                onClick={() => { toggleDark(); setIsAvatarOpen(false); }}
+                className="flex items-center gap-3 w-full px-4 py-2.5"
+                style={{ color: C.muted }}
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                <span className="font-mono text-xs">{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+              </button>
+              <button
+                onClick={() => { onToggleOrientation?.(!externalIsLandscape); setIsAvatarOpen(false); }}
+                className="flex items-center gap-3 w-full px-4 py-2.5"
+                style={{ color: C.muted }}
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span className="font-mono text-xs">Rotate View</span>
+              </button>
+            </div>
+            <div className="py-1">
+              <button className="flex items-center gap-3 w-full px-4 py-2.5" style={{ color: '#ef4444' }}>
+                <LogOut className="w-4 h-4" />
+                <span className="font-mono text-xs">Sign Out</span>
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 
-          {/* Chat Content */}
-          <div className="flex flex-col" style={{ height: 'calc(100% - 46px)' }}>
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
-              {messages.map((message) =>
-                message.type === 'user' ? (
-                  <UserMessage
-                    key={message.id}
-                    message={message.content}
-                    timestamp={message.timestamp}
-                    userInitials={userInitials}
-                  />
+  // ── Nav drawer (left slide-over) ───────────────────────────────────────────
+
+  const NavDrawer = (
+    <Sheet open={isNavOpen} onOpenChange={setIsNavOpen}>
+      <SheetContent
+        side="left"
+        className="w-[64px] border-r p-0"
+        style={{
+          background: C.surface,
+          borderColor: C.tealFaint,
+        }}
+        showClose={false}
+      >
+        {/* Close button at top */}
+        <div
+          className="flex items-center justify-center"
+          style={{ height: '44px', borderBottom: `1px solid ${C.tealFaint}` }}
+        >
+          <button onClick={() => setIsNavOpen(false)} style={{ color: C.muted }}>
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Icon-only nav items with tooltips */}
+        <nav className="flex flex-col items-center py-3 gap-1">
+          {[
+            { icon: <Home className="w-5 h-5" />, label: 'Home' },
+            { icon: <Briefcase className="w-5 h-5" />, label: 'Projects' },
+            { icon: <Package className="w-5 h-5" />, label: 'Materials' },
+            { icon: <Layers className="w-5 h-5" />, label: 'Nesting Tool' },
+            ...(navigationItems.length ? navigationItems : []),
+          ].map((item, i) => (
+            <Tooltip key={i}>
+              <TooltipTrigger asChild>
+                <motion.button
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                  onClick={() => { item.onClick?.(); setIsNavOpen(false); }}
+                  className="w-10 h-10 flex items-center justify-center"
+                  style={{ color: C.tealSolid }}
+                  aria-label={item.label}
+                >
+                  {item.icon}
+                </motion.button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <span className="font-mono text-xs">{item.label}</span>
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // HOME GUIDE LAYOUT  (currentSheetData === undefined)
+  // Unified workflow + chat canvas — no floating drawer
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  if (!currentSheetData) {
+    return (
+      <div
+        className="relative flex flex-col overflow-hidden font-mono"
+        style={{ height: '100dvh', background: C.bg }}
+      >
+        {/* Watermark */}
+        <div className="fixed inset-0 z-0 pointer-events-none select-none flex items-center justify-center">
+          <img src={watermarkLogo} alt="" className="w-64 h-64 object-contain opacity-[0.025]" draggable={false} />
+        </div>
+
+        {TopBar}
+        {SubtitleBar}
+
+        {/* ── Scroll canvas: workflow steps + chat ──── */}
+        <div
+          ref={scrollRef}
+          className="relative z-10 flex-1 overflow-y-auto px-3 pt-3 hide-scrollbar"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {/* Workflow steps */}
+          {WORKFLOW_STEPS.map(step => (
+            <WorkflowStepCard
+              key={step.number}
+              step={step}
+              isOpen={openSteps.has(step.number)}
+              onToggle={() => toggleStep(step.number)}
+              activeChip={activeChip}
+              onChipClick={handleChipClick}
+            />
+          ))}
+
+          {/* Chat messages — inline below workflow cards */}
+          {messages.length > 0 && (
+            <div className="mt-3 space-y-2 pb-4">
+              {messages.map(msg =>
+                msg.type === 'user' ? (
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    className="flex items-start justify-end gap-2"
+                  >
+                    <div className="max-w-[80%]">
+                      <div
+                        className="px-4 py-3 font-mono text-sm"
+                        style={{
+                          background: C.userBg,
+                          border: `1px solid ${C.userBorder}`,
+                          color: C.text,
+                          borderRadius: '12px 12px 2px 12px', // prototype exception — chat bubble shape
+                        }}
+                      >
+                        {msg.content}
+                      </div>
+                      <p className="text-right font-mono text-[10px] mt-1" style={{ color: C.vMuted }}>
+                        {msg.timestamp}
+                      </p>
+                    </div>
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 font-mono text-[10px] mt-0.5"
+                      style={{
+                        border: `1px solid ${C.tealDim}`,
+                        background: C.surface,
+                        color: C.teal,
+                      }}
+                    >
+                      {userInitials}
+                    </div>
+                  </motion.div>
                 ) : (
-                  <ChatMessage
-                    key={message.id}
-                    message={message.content}
-                    timestamp={message.timestamp}
-                  />
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    className="flex items-start gap-2"
+                  >
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                      style={{ background: C.tealSolid }}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <div className="max-w-[80%]">
+                      <div
+                        className="px-4 py-3 font-mono text-sm"
+                        style={{
+                          background: C.aiBg,
+                          border: `1px solid ${C.aiBorder}`,
+                          color: C.text,
+                          borderRadius: '12px 12px 12px 2px', // prototype exception — chat bubble shape
+                        }}
+                      >
+                        {msg.content}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="font-mono text-[10px]" style={{ color: C.muted }}>Sturij AI</span>
+                        <span style={{ color: C.aiBorder }}>•</span>
+                        <span className="font-mono text-[10px]" style={{ color: C.muted }}>{msg.timestamp}</span>
+                      </div>
+                    </div>
+                  </motion.div>
                 )
               )}
+              <div ref={messagesEndRef} />
             </div>
+          )}
 
-            {/* Chat Input */}
-            <div className="border-t border-gray-200/50 dark:border-gray-800/50 p-2">
-              <ChatInput onSendMessage={handleSendMessage} />
-            </div>
-          </div>
+          {/* Spacer so last card clears the bottom bar */}
+          <div className="h-4" />
         </div>
-      )}
 
-      {/* Carousel Bar - Fixed at top below header and drawer toggle */}
-      {currentSheetData && (
-        <div 
-          className="fixed top-[108px] left-1/2 z-50"
+        {/* ── Bottom bar: input + suggestion chips ──── */}
+        <div
+          className="relative z-50 flex-shrink-0 bg-black"
           style={{
-            transform: 'translateX(-50%)',
+            borderTop: `1px solid ${C.tealFaint}`,
+            paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
           }}
         >
-          <div className="backdrop-blur-xl bg-black/80 dark:bg-black/80 rounded-xl border border-gray-700/30 dark:border-gray-600/30 shadow-lg px-6 py-2">
-            <div className="flex items-center gap-6">
-              {/* Job Number - Stylish Badge */}
-              <div className="flex items-center gap-3">
-                <div className="px-3 py-1 rounded-lg bg-teal-500/20 dark:bg-teal-400/20 border border-teal-500/30 dark:border-teal-400/30">
-                  <span className="text-sm font-bold text-teal-400 dark:text-teal-300 tracking-wide">R001</span>
-                </div>
-                <div className="text-xs text-gray-300 dark:text-gray-400">
-                  <span className="text-teal-400 dark:text-teal-400 font-semibold">{currentSheetData.panelsCut}/{currentSheetData.totalPanels}</span> cut
-                </div>
-              </div>
-              
-              {/* Divider */}
-              <div className="w-px h-6 bg-gray-600/50 dark:bg-gray-600/50"></div>
-              
-              {/* Sheet Navigation - Compact */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={onPrevSheet}
-                  disabled={currentSheetIndex === 0}
-                  className="p-1.5 rounded-lg backdrop-blur-sm bg-gray-800/60 dark:bg-gray-800/60 border border-gray-700/40 dark:border-gray-600/40 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-700/60 dark:hover:bg-gray-700/60 transition-all"
-                >
-                  <ChevronLeft className="w-4 h-4 text-white" />
-                </button>
-                
-                {/* Current Sheet Number Badge */}
-                <div className="px-2.5 py-0.5 rounded-lg bg-gray-100/90 dark:bg-gray-100/90">
-                  <span className="text-xs font-bold text-gray-900 dark:text-gray-900">{(currentSheetIndex ?? 0) + 1}/{totalSheets}</span>
-                </div>
-                
-                <button
-                  onClick={onNextSheet}
-                  disabled={currentSheetIndex === totalSheets! - 1}
-                  className="p-1.5 rounded-lg backdrop-blur-sm bg-gray-800/60 dark:bg-gray-800/60 border border-gray-700/40 dark:border-gray-600/40 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-700/60 dark:hover:bg-gray-700/60 transition-all"
-                >
-                  <ChevronRight className="w-4 h-4 text-white" />
-                </button>
-              </div>
+          {/* Input row */}
+          <div
+            className="flex items-center gap-2 mx-3 mt-2 mb-1 px-3 py-2"
+            style={{
+              background: C.surface,
+              border: `1px solid ${C.tealDim}`,
+              borderRadius: '10px', // prototype exception
+            }}
+          >
+            <Paperclip className="w-4 h-4 flex-shrink-0" style={{ color: C.vMuted }} />
+            <input
+              ref={inputRef}
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSend()}
+              placeholder="Enter customer, number or schedule"
+              className="flex-1 bg-transparent font-mono text-sm outline-none"
+              style={{ color: C.text }}
+              // placeholder styling via CSS would need a class — using inline opacity via text color
+            />
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+              onClick={handleSend}
+              disabled={!inputValue.trim()}
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{
+                background: inputValue.trim() ? C.tealSolid : 'rgba(13,148,136,0.25)',
+              }}
+              aria-label="Send"
+            >
+              <Send className="w-3.5 h-3.5 text-white" />
+            </motion.button>
+          </div>
 
-              {/* Divider */}
-              <div className="w-px h-6 bg-gray-600/50 dark:bg-gray-600/50"></div>
-
-              {/* Scale Badge */}
-              <div className="px-2.5 py-0.5 rounded-lg bg-gray-800/60 border border-gray-700/40">
-                <span className="text-xs font-mono text-gray-300">{artifactScale ?? 100}%</span>
-              </div>
-            </div>
+          {/* Suggestion chips row */}
+          <div
+            className="flex items-center gap-2 px-3 pb-1 pt-0.5 overflow-x-auto hide-scrollbar"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            {SUGGESTION_CHIPS.map(chip => (
+              <motion.button
+                key={chip}
+                whileTap={{ scale: 0.94 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                onClick={() => handleChipSend(chip)}
+                className="flex-shrink-0 px-3 py-1.5 font-mono text-[11px] whitespace-nowrap"
+                style={{
+                  background: C.card,
+                  border: `1px solid ${C.tealFaint}`,
+                  color: C.muted,
+                  borderRadius: '20px', // prototype exception — pill chips
+                }}
+              >
+                {chip}
+              </motion.button>
+            ))}
+            {/* Grid action */}
+            <button
+              className="flex-shrink-0 w-8 h-8 flex items-center justify-center ml-auto"
+              style={{ color: C.vMuted }}
+              aria-label="More options"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
           </div>
         </div>
-      )}
 
-      {/* Bottom Footer Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 h-14 backdrop-blur-xl bg-black/80 dark:bg-black/80 border-t border-gray-700/50 dark:border-gray-600/50 shadow-sm">
+        {NavDrawer}
+        {AvatarMenu}
       </div>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // JOB-LOADED LAYOUT  (currentSheetData exists — artifact full-screen)
+  // Artifact fills the viewport. Chat available as floating bottom panel.
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  return (
+    <div
+      className="relative flex flex-col overflow-hidden font-mono"
+      style={{ height: '100dvh', background: C.bg }}
+    >
+      {/* Watermark */}
+      <div className="fixed inset-0 z-0 pointer-events-none select-none flex items-center justify-center">
+        <img src={watermarkLogo} alt="" className="w-64 h-64 object-contain opacity-[0.025]" draggable={false} />
+      </div>
+
+      {TopBar}
+
+      {/* Subtitle bar — shows job info when loaded */}
+      <div
+        className="relative z-40 flex-shrink-0 flex items-center px-3 bg-black"
+        style={{ height: '40px', borderBottom: `1px solid ${C.tealFaint}` }}
+      >
+        <motion.button
+          whileTap={{ scale: 0.88 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+          onClick={() => setIsNavOpen(true)}
+          className="w-8 h-8 flex items-center justify-center flex-shrink-0 mr-2"
+          aria-label="Navigation"
+        >
+          <AlignJustify className="w-4 h-4" style={{ color: C.muted }} />
+        </motion.button>
+
+        {/* Job ref */}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span
+            className="font-mono text-[11px] tracking-widest px-2 py-0.5"
+            style={{
+              background: 'rgba(13,148,136,0.15)',
+              border: `1px solid ${C.tealDim}`,
+              color: C.teal,
+              borderRadius: '4px',
+            }}
+          >
+            R001
+          </span>
+          <span className="font-mono text-[11px]" style={{ color: C.muted }}>
+            <span style={{ color: C.teal }}>{currentSheetData.panelsCut}/{currentSheetData.totalPanels}</span> cut
+          </span>
+          <div className="w-px h-3 mx-1" style={{ background: C.tealFaint }} />
+          <div className="flex items-center gap-1.5">
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+              onClick={onPrevSheet}
+              disabled={currentSheetIndex === 0}
+              className="w-6 h-6 flex items-center justify-center"
+              style={{ color: C.muted, opacity: currentSheetIndex === 0 ? 0.3 : 1 }}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </motion.button>
+            <span className="font-mono text-[11px] px-2 py-0.5"
+              style={{ background: C.surface, border: `1px solid ${C.tealFaint}`, color: C.text, borderRadius: '4px' }}>
+              {(currentSheetIndex ?? 0) + 1}/{totalSheets}
+            </span>
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+              onClick={onNextSheet}
+              disabled={currentSheetIndex === (totalSheets ?? 1) - 1}
+              className="w-6 h-6 flex items-center justify-center"
+              style={{ color: C.muted, opacity: currentSheetIndex === (totalSheets ?? 1) - 1 ? 0.3 : 1 }}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
+          </div>
+          <span className="font-mono text-[11px] ml-1" style={{ color: C.vMuted }}>
+            {Math.round((artifactScale ?? 0.65) * 100)}%
+          </span>
+        </div>
+
+        <motion.button
+          whileTap={{ scale: 0.88 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+          className="w-8 h-8 flex items-center justify-center flex-shrink-0"
+          style={{ color: C.muted }}
+          aria-label="New session"
+        >
+          <PenSquare className="w-4 h-4" />
+        </motion.button>
+      </div>
+
+      {/* Artifact viewport — fills remaining space */}
+      <div className="relative z-10 flex-1 overflow-hidden">
+        <div className="absolute inset-0">
+          {isValidElement(children)
+            ? cloneElement(children as React.ReactElement<any>, {
+                parentScale: artifactScale ?? 0.65,
+                parentRotation: artifactRotation,
+              })
+            : children}
+        </div>
+
+        {/* Floating chat bubble */}
+        <AnimatePresence>
+          {!isChatOpen && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsChatOpen(true)}
+              className="fixed bottom-6 right-4 w-11 h-11 rounded-full flex items-center justify-center z-40"
+              style={{ background: C.tealSolid, boxShadow: '0 4px 16px rgba(13,148,136,0.5)' }}
+              aria-label="Open chat"
+            >
+              <Sparkles className="w-5 h-5 text-white" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* Chat panel — slides up from bottom, within viewport */}
+        <AnimatePresence>
+          {isChatOpen && (
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+              className="absolute bottom-0 left-0 right-0 z-50 flex flex-col"
+              style={{
+                height: '50vh',
+                background: 'rgba(7,13,26,0.97)',
+                borderTop: `1px solid ${C.tealDim}`,
+                paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+              }}
+            >
+              {/* Chat header */}
+              <div
+                className="flex items-center px-4 py-2.5 flex-shrink-0"
+                style={{ borderBottom: `1px solid ${C.tealFaint}`, background: 'rgba(0,0,0,0.55)' }}
+              >
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center mr-2.5 flex-shrink-0"
+                  style={{ background: C.tealSolid }}
+                >
+                  <Sparkles className="w-3 h-3 text-white" />
+                </div>
+                <span className="font-mono text-xs tracking-widest flex-1" style={{ color: C.text }}>
+                  CNC Nesting Assistant
+                </span>
+                <motion.button
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                  onClick={() => setIsChatOpen(false)}
+                  className="p-1.5"
+                  style={{ color: C.muted }}
+                >
+                  <X className="w-4 h-4" />
+                </motion.button>
+              </div>
+
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2 hide-scrollbar">
+                {messages.map(msg =>
+                  msg.type === 'user' ? (
+                    <div key={msg.id} className="flex justify-end">
+                      <div
+                        className="px-3 py-2 font-mono text-xs max-w-[80%]"
+                        style={{ background: C.userBg, border: `1px solid ${C.userBorder}`, color: C.text, borderRadius: '10px 10px 2px 10px' }}
+                      >
+                        {msg.content}
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={msg.id} className="flex gap-2">
+                      <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: C.tealSolid }}>
+                        <Sparkles className="w-3 h-3 text-white" />
+                      </div>
+                      <div
+                        className="px-3 py-2 font-mono text-xs max-w-[80%]"
+                        style={{ background: C.aiBg, border: `1px solid ${C.aiBorder}`, color: C.text, borderRadius: '10px 10px 10px 2px' }}
+                      >
+                        {msg.content}
+                      </div>
+                    </div>
+                  )
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Chat input */}
+              <div className="px-3 pt-1">
+                <div
+                  className="flex items-center gap-2 px-3 py-2"
+                  style={{ background: C.surface, border: `1px solid ${C.tealDim}`, borderRadius: '8px' }}
+                >
+                  <Paperclip className="w-4 h-4 flex-shrink-0" style={{ color: C.vMuted }} />
+                  <input
+                    value={inputValue}
+                    onChange={e => setInputValue(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSend()}
+                    placeholder="Enter customer, number or schedule"
+                    className="flex-1 bg-transparent font-mono text-xs outline-none"
+                    style={{ color: C.text }}
+                  />
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                    onClick={handleSend}
+                    className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: inputValue.trim() ? C.tealSolid : 'rgba(13,148,136,0.25)' }}
+                  >
+                    <Send className="w-3 h-3 text-white" />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {NavDrawer}
+      {AvatarMenu}
     </div>
   );
 }

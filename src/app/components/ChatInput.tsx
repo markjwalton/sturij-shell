@@ -137,7 +137,7 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
               <button
                 key={idx}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-xs text-gray-700 dark:text-gray-300 whitespace-nowrap flex-shrink-0"
+                className="px-3 py-1.5 text-xs whitespace-nowrap flex-shrink-0 shell-text-muted hover:shell-text transition-colors bg-transparent border-none cursor-pointer"
               >
                 {suggestion}
               </button>

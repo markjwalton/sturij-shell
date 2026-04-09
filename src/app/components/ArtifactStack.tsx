@@ -1,7 +1,7 @@
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GripVertical, Layers } from 'lucide-react';
-import { DrawerOpenDown, DrawerCloseUp } from './icons/CollapseIcons';
+import { AnimatedToggle } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
@@ -178,9 +178,9 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                       className="h-7 w-7 hover:bg-gray-200 dark:hover:bg-gray-700 flex-shrink-0"
                     >
                       {artifact.isExpanded ? (
-                        <DrawerCloseUp size={14} />
+                        <AnimatedToggle isOpen={true} direction="vertical" size={14} />
                                               ) : (
-                        <DrawerOpenDown size={14} />
+                        <AnimatedToggle isOpen={false} direction="vertical" size={14} />
                       )}
                     </Button>
                   </div>

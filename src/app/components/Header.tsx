@@ -1,5 +1,5 @@
 import { Bell, Search, Moon, Sun, User, CreditCard, FileText, LogOut, Shield, Palette, Zap, Database, Key, Mail, Users, BarChart3, Code, Plug, Webhook, LayoutGrid, Layers, ChevronUp, ChevronDown, Minimize2, Maximize2, PanelLeftClose, PanelLeft, X, AlertCircle, Clock, CheckCircle, ArrowRight, Settings, ChevronLeft, ChevronRight, PanelRightClose, PanelRightOpen } from 'lucide-react';
-import { SidebarCollapseLeft, SidebarExpandRight, PanelCollapseDown, PanelExpandUp } from './icons/CollapseIcons';
+import { AnimatedToggle } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Avatar } from './ui/avatar';
@@ -206,7 +206,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
               onClick={onToggleSidebarCollapse}
               className="h-8 w-8 hover:bg-gray-100 dark:hover:bg-white/10 text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white"
             >
-              {isSidebarCollapsed ? <SidebarExpandRight size={18} /> : <SidebarCollapseLeft size={18} />}
+              <AnimatedToggle isOpen={!isSidebarCollapsed} direction="horizontal" size={18} />
             </Button>
           </TooltipTrigger>
           <TooltipContent>{isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}</TooltipContent>
@@ -688,7 +688,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
             className="h-8 w-8 hover:bg-gray-100 dark:hover:bg-white/15"
             title={isPanelCollapsed ? 'Expand Panel' : 'Collapse Panel'}
           >
-            {isPanelCollapsed ? <PanelExpandUp size={18} className="shell-text-muted" /> : <PanelCollapseDown size={18} className="shell-text-muted" />}
+            <AnimatedToggle isOpen={!isPanelCollapsed} direction="vertical" size={18} className="shell-text-muted" />
           </Button>
         </div>
       </div>

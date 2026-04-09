@@ -1,5 +1,6 @@
 import { Search, Sun, Moon, User, CreditCard, FileText, LogOut, Shield, Palette, Zap, Database, Key, Mail, Users, BarChart3, Code, Plug, Webhook, X, AlertCircle, Clock, CheckCircle, Settings } from 'lucide-react';
 import logoWhite from '../../assets/logo-full-white.png';
+import logoIcon from '../../assets/logo-white.png';
 import { AnimatedToggle } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -151,7 +152,13 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
     <header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full shell-surface shell-border-b">
       {/* Sidebar Toggle + Logo */}
       <div className="flex items-center gap-3">
-        <img src={logoWhite} alt="Sturij" className="h-12 w-auto" />
+        <div className="flex items-center h-full">
+          {isSidebarCollapsed ? (
+            <img src={logoIcon} alt="Sturij" className="h-10 w-10" />
+          ) : (
+            <img src={logoWhite} alt="Sturij" className="h-10 w-auto" />
+          )}
+        </div>
       </div>
       
       {/* Navigation - Aligned with content below */}
@@ -183,7 +190,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setShowSearch(true)}
-                className="h-8 w-8 shell-icon-btn"
+                className="h-10 w-10 shell-icon-btn"
               >
                 <Search className="w-7 h-7" strokeWidth={1.5} />
               </Button>
@@ -200,7 +207,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setShowSettingsMenu(!showSettingsMenu)}
-                className="h-8 w-8 shell-icon-btn"
+                className="h-10 w-10 shell-icon-btn"
               >
                 <Settings className="w-7 h-7" strokeWidth={1.5} />
               </Button>
@@ -370,12 +377,12 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="relative flex items-center hover:opacity-80 transition-opacity"
           >
-            <Avatar className="w-10 h-10 shell-avatar font-medium flex items-center justify-center cursor-pointer">
+            <Avatar className="w-10 h-10 shell-avatar font-medium text-sm tracking-wide flex items-center justify-center cursor-pointer">
               {userInitials}
             </Avatar>
             {/* Unread notification dot */}
             {unreadCount > 0 && (
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full shell-notification-pulse"></span>
             )}
           </button>
 

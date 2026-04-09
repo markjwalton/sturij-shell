@@ -103,7 +103,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
           initial={{ width: 420 }}
           animate={{ width: 64 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-0 top-16 bottom-0 z-50 flex flex-col shell-surface shell-border-l"
+          className="fixed right-0 top-16 bottom-0 z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
         >
           {/* Panel toggle */}
           <div className="flex justify-end p-2">
@@ -145,7 +145,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         initial={false}
         animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
-        className="fixed right-0 top-16 bottom-0 z-50 flex flex-col relative shell-surface shell-border-l"
+        className="fixed right-0 top-16 bottom-0 z-50 flex flex-col relative shell-surface shell-panel-depth shell-border-l"
       >
         {/* Panel toggle */}
         <div className="flex justify-end p-2">

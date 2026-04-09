@@ -28,9 +28,9 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
 
   return (
     <aside
+      className="shell-panel-depth"
       style={{
         width: isCollapsed ? '64px' : '240px',
-        background: 'var(--shell-surface)',
         borderRight: '1px solid var(--shell-border)',
         flexShrink: 0,
         display: 'flex',

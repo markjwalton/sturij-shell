@@ -13,7 +13,7 @@
   --shell-icon:         rgba(209, 213, 220, 0.7);
 
   /* Gradients — navy/cyan */
-  --shell-hero-gradient: radial-gradient(ellipse at 60% 40%, rgba(70,236,213,0.08) 0%, transparent 60%);
+  --shell-hero-gradient: radial-gradient(ellipse 80% 60% at 65% 35%, rgba(70,236,213,0.05) 0%, transparent 70%);
 }
 
 /* ── Shell colour tokens — GREEN (sage/gold, TradeAI) ── */
@@ -29,7 +29,7 @@
   --shell-icon:         rgba(240, 237, 230, 0.7);
 
   /* Gradients — sage/gold (from TradeAI landing) */
-  --shell-hero-gradient: radial-gradient(ellipse at 60% 40%, rgba(74,93,78,0.15) 0%, transparent 60%);
+  --shell-hero-gradient: radial-gradient(ellipse 80% 60% at 65% 35%, rgba(212,165,116,0.06) 0%, transparent 70%);
 }
 
 /* ── Shell utility classes ── */
@@ -57,7 +57,7 @@
 .shell-accent-dim-text { color: var(--shell-accent); opacity: 0.5; }
 
 /* Watermark label */
-.shell-watermark-text { color: var(--shell-text-muted); opacity: 0.25; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.shell-watermark-text { color: var(--shell-text-muted); opacity: 0.45; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
 /* Avatar */
 .shell-avatar { background: var(--shell-accent-faint); border: 1px solid var(--shell-accent); color: var(--shell-accent); }
@@ -305,10 +305,24 @@
   transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
-  opacity: 0.025;
+  opacity: 0.03;
   pointer-events: none;
   user-select: none;
-  z-index: 0;
+  z-index: 1;
   image-rendering: crisp-edges;
   image-rendering: -webkit-optimize-contrast;
+  filter: none;
+}
+
+.shell-notification-pulse {
+  box-shadow: 0 0 4px 1px rgba(239, 68, 68, 0.5);
+  animation: notificationPulse 2s ease-in-out infinite;
+}
+@keyframes notificationPulse {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 8px 3px rgba(239, 68, 68, 0.2); }
+}
+
+.shell-panel-depth {
+  background: linear-gradient(180deg, var(--shell-surface) 0%, color-mix(in srgb, var(--shell-surface) 95%, var(--shell-background)) 100%);
 }

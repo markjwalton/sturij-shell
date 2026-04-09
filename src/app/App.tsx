@@ -124,7 +124,7 @@ export default function App() {
             />
             <AnimatedBackground />
 
-            <div className="flex-1 overflow-y-auto relative z-10">
+            <div className="flex-1 overflow-y-auto relative z-[2]">
               <div className="max-w-4xl mx-auto px-6 py-12">
                 <div className="space-y-6">
                   {messages.map((message) =>

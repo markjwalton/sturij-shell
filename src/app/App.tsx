@@ -157,6 +157,7 @@ export default function App() {
             ref={artifactStackRef}
             artifacts={artifacts}
             isCollapsed={isPanelCollapsed}
+            onToggleCollapse={() => setIsPanelCollapsed(!isPanelCollapsed)}
           />
         </div>
       </div>

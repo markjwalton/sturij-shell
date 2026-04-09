@@ -20,6 +20,7 @@ interface ArtifactStackProps {
   artifacts: ArtifactCard[];
   onReorder?: (artifacts: ArtifactCard[]) => void;
   isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export interface ArtifactStackHandle {
@@ -29,7 +30,7 @@ export interface ArtifactStackHandle {
 }
 
 export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>(
-  ({ artifacts: initialArtifacts, onReorder, isCollapsed = false }, ref) => {
+  ({ artifacts: initialArtifacts, onReorder, isCollapsed = false, onToggleCollapse }, ref) => {
     const [artifacts, setArtifacts] = useState(initialArtifacts);
     const [draggedCard, setDraggedCard] = useState<string | null>(null);
 
@@ -104,16 +105,23 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
           transition={{ duration: 0.3 }}
           className="fixed right-0 top-16 bottom-0 z-50 flex flex-col shell-surface shell-border-l"
         >
+          {/* Panel toggle */}
+          <div className="flex justify-end p-2">
+            <button onClick={onToggleCollapse} className="shell-accent-text shell-icon-btn">
+              <AnimatedToggle isOpen={false} direction="horizontal" size={18} />
+            </button>
+          </div>
           {/* Collapsed Artifact Navigation */}
-          <div className="flex-1 overflow-y-auto p-2 pt-6">
+          <div className="flex-1 overflow-y-auto p-2">
             <div className="space-y-2 flex flex-col items-center">
               {artifacts.map((artifact) => (
                 <Tooltip key={artifact.id}>
                   <TooltipTrigger asChild>
                     <button
-                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all shell-icon hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all shell-icon hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700 relative"
                     >
                       {artifact.icon || <Layers className="w-5 h-5" />}
+                      <GripVertical className="w-3 h-3 shell-icon absolute right-0.5 top-1/2 -translate-y-1/2 opacity-50" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="left">
@@ -139,8 +147,14 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         transition={{ duration: 0.3 }}
         className="fixed right-0 top-16 bottom-0 z-50 flex flex-col relative shell-surface shell-border-l"
       >
+        {/* Panel toggle */}
+        <div className="flex justify-end p-2">
+          <button onClick={onToggleCollapse} className="shell-accent-text shell-icon-btn">
+            <AnimatedToggle isOpen={true} direction="horizontal" size={18} />
+          </button>
+        </div>
         {/* Stacked Artifact Cards */}
-        <div className="flex-1 overflow-y-auto p-4 pt-6">
+        <div className="flex-1 overflow-y-auto p-4 pt-0">
           <div className="space-y-3">
             {artifacts.map((artifact, index) => (
               <motion.div
@@ -166,7 +180,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                   <div className="flex flex-col items-end gap-1">
                     {artifact.badge && (
                       <Badge
-                        className={`text-xs ${artifact.badgeColor || 'bg-blue-100 text-blue-700'}`}
+                        className="text-xs shell-surface shell-border shell-text-muted rounded px-1.5 py-0.5"
                       >
                         {artifact.badge}
                       </Badge>

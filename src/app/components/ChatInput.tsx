@@ -92,9 +92,9 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
   };
 
   return (
-    <div className="border-t p-6" style={{ borderColor: 'var(--shell-border)', background: 'var(--shell-surface)' }}>
+    <div className="p-6 shell-input-bar">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all" style={{ background: 'var(--shell-background)', border: '1px solid var(--shell-border)' }}>
+        <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all shell-input-field">
           <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-gray-200 dark:hover:bg-gray-700">
             <Paperclip className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </Button>

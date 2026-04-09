@@ -30,6 +30,22 @@
   --shell-hero-gradient: radial-gradient(ellipse at 60% 40%, rgba(74,93,78,0.15) 0%, transparent 60%);
 }
 
+/* ── Shell utility classes ── */
+.shell-bg           { background: var(--shell-background); }
+.shell-surface      { background: var(--shell-surface); }
+.shell-border       { border: 1px solid var(--shell-border); }
+.shell-border-l     { border-left: 1px solid var(--shell-border); }
+.shell-border-b     { border-bottom: 1px solid var(--shell-border); }
+.shell-border-t     { border-top: 1px solid var(--shell-border); }
+.shell-text         { color: var(--shell-text-primary); }
+.shell-text-muted   { color: var(--shell-text-muted); }
+.shell-accent-text  { color: var(--shell-accent); }
+.shell-accent-bg    { background: var(--shell-accent); color: var(--shell-background); }
+.shell-accent-dim   { background: var(--shell-accent-dim); border: 1px solid var(--shell-accent-faint); }
+.shell-hero-glow    { background: var(--shell-hero-gradient), var(--shell-background); }
+.shell-input-bar    { background: var(--shell-surface); border-top: 1px solid var(--shell-border); }
+.shell-input-field  { background: var(--shell-background); border: 1px solid var(--shell-border); }
+
 :root {
   --font-size: 16px;
   --background: #ffffff;

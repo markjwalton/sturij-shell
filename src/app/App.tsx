@@ -94,7 +94,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-screen" style={{ background: 'var(--shell-background)', color: 'var(--shell-text-primary)' }}>
+      <div className="flex flex-col h-screen shell-bg shell-text">
         <Header
           userName="Mark"
           userInitials="MW"
@@ -113,7 +113,7 @@ export default function App() {
             isCollapsed={isSidebarCollapsed}
           />
 
-          <main className="flex-1 flex flex-col relative overflow-hidden" style={{ background: 'var(--shell-hero-gradient), var(--shell-background)' }}>
+          <main className="flex-1 flex flex-col relative overflow-hidden shell-hero-glow">
             <AnimatedBackground />
 
             <div className="flex-1 overflow-y-auto relative z-10">

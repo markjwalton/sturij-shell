@@ -19,7 +19,7 @@ export function ChatMessage({ message, timestamp, actions }: ChatMessageProps) {
         <Sparkles className="w-5 h-5 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="rounded-2xl p-5 shadow-sm" style={{ background: 'var(--shell-surface)', border: '1px solid var(--shell-border)' }}>
+        <div className="rounded-2xl p-5 shadow-sm shell-surface shell-border">
           <div
             className="leading-relaxed text-sm"
             style={{ color: 'var(--shell-text-primary)' }}

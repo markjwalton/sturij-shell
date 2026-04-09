@@ -1,76 +1,79 @@
-# STORYBOOK-RULES.md
-## Storybook Standards for the Sturij Project
-
-> This document defines how we write, structure, and maintain Storybook stories across the Sturij codebase. Follow these rules for every component. No exceptions.
-
----
-
-## 1. What Is a Story and When to Write One
-
-A **story** captures the rendered state of a UI component at a specific point in time, given a specific set of inputs (args). Think of a story as a visual test case — it says "here is my component, and here is exactly how it should look in this scenario."
-
-### Write a story when:
-- You are building a new component (before merging — see Sturij rules at the end)
-- A component has meaningful visual or interactive states (disabled, loading, error, empty, etc.)
-- You want to document how a component behaves for other developers or designers
-- You need to test interactions without spinning up the full app
-
-### Stories serve multiple purposes:
-- **Development** — build components in isolation, without needing a running backend
-- **Documentation** — self-documenting component library for the team
-- **Testing** — interaction tests via play functions, visual regression via Chromatic
-- **Design review** — share live component states with designers
+# Storybook Standards — Sturij Platform
+**Version:** 1.1 | **Date:** 2026-04-08 | **Status:** Authoritative
+**Scope:** All components in sturij-web. No exceptions.
+**Enforced by:** Holly pre-flight checklist, PR review, CI pipeline
 
 ---
 
-## 2. Story File Naming Conventions
+## 1. Purpose
 
-Story files live **alongside the component** they document, or in `src/stories/` for Sturij (see Section 11).
+This document defines how Storybook stories are written, structured, and maintained across the Sturij codebase. Every component gets a story. Every story follows these rules. This is not guidance — it is law.
 
-### Naming pattern:
-```
-ComponentName.stories.tsx
-```
+Storybook serves four functions in the Sturij workflow:
 
-### Examples:
-```
-Button.stories.tsx
-OrderCard.stories.tsx
-StatusBadge.stories.tsx
-WorkOrderForm.stories.tsx
-```
-
-### Rules:
-- Always use `.stories.tsx` (TypeScript + JSX). Never `.js` or `.jsx`.
-- Match the component file name exactly. `Button.tsx` → `Button.stories.tsx`
-- Use PascalCase for the file name
-- Never use generic names like `test.stories.tsx` or `components.stories.tsx`
+| Function | How |
+|----------|-----|
+| Development | Build components in isolation without a running backend |
+| Documentation | Self-documenting component library — the single source of truth |
+| Testing | Interaction tests via play functions, visual regression via Chromatic |
+| Design review | Share live component states for review before merge |
 
 ---
 
-## 3. Story Structure — Default Export, Named Exports, Meta
+## 2. When to Write a Story
 
-Stories follow the **Component Story Format (CSF)**, an ES module standard. Every story file has two parts:
+Write a story when:
+- You are building a new component (mandatory before merge — see Section 13.2)
+- A component has meaningful visual or interactive states
+- You want to document behaviour for other developers or designers
+- You need to test interactions without the full application
 
-1. **Default export (meta)** — describes the component and configures Storybook
-2. **Named exports** — individual story variants
+A component without a story is undocumented. Undocumented components are a liability.
 
-### Minimal example:
+---
+
+## 3. File Naming & Location
+
+### Location
+
+All stories live in `src/stories/`. Not alongside the component.
+
+```
+src/
+├── components/
+│   └── Button/
+│       └── Button.tsx
+├── stories/
+│   └── Button.stories.tsx
+```
+
+### Naming
+
+| Rule | Example |
+|------|---------|
+| Extension | `.stories.tsx` — always TypeScript + JSX |
+| Casing | PascalCase matching the component |
+| Naming | `ComponentName.stories.tsx` |
+| Forbidden | `test.stories.tsx`, `components.stories.tsx`, `.js`, `.jsx` |
+
+---
+
+## 4. Story Structure — CSF Format
+
+Every story file has two parts: a default export (meta) and named exports (stories).
 
 ```tsx
-// Button.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from './Button';
+import { Button } from '../components/Button/Button';
 
-// ── Meta (default export) ────────────────────────────────────────────
 const meta = {
-  title: 'Components/Button',
+  title: 'Components/Inputs/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: 'Primary action button. Use for the most important action on any page or form.',
+        component: 'Primary action trigger. One primary button per view.',
       },
     },
   },
@@ -79,40 +82,29 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// ── Stories (named exports) ──────────────────────────────────────────
 export const Default: Story = {
   args: {
     label: 'Save Changes',
     variant: 'primary',
   },
 };
-
-export const Disabled: Story = {
-  args: {
-    label: 'Save Changes',
-    variant: 'primary',
-    disabled: true,
-  },
-};
 ```
 
-### Key rules:
-- The `meta` object **must** use `satisfies Meta<typeof Component>` for full TypeScript inference
-- Always export `meta` as `export default meta`
-- Define `type Story = StoryObj<typeof meta>` at the top for reuse
-- Named exports use **UpperCamelCase** (`Default`, `Disabled`, `LoadingState` — not `loading_state` or `loadingState`)
-- Always include `tags: ['autodocs']` to generate automatic documentation pages
+### Rules
 
-### Custom render (when needed):
+- Meta **must** use `satisfies Meta<typeof Component>` for TypeScript inference
+- Always define `type Story = StoryObj<typeof meta>` at the top
+- Named exports use **UpperCamelCase** — `Default`, `LoadingState`, `WithError`
+- Always include `tags: ['autodocs']`
+- Always include a component-level description (see Section 12)
 
-Use `render` when a component needs a wrapper to display correctly:
+### Custom Render
+
+Use `render` only when a component genuinely needs a wrapper. Always spread `args` to preserve Controls.
 
 ```tsx
 export const InFormContext: Story = {
-  args: {
-    label: 'Submit',
-    variant: 'primary',
-  },
+  args: { label: 'Submit', variant: 'primary' },
   render: (args) => (
     <form onSubmit={(e) => e.preventDefault()}>
       <Button {...args} />
@@ -121,81 +113,44 @@ export const InFormContext: Story = {
 };
 ```
 
-> **Important:** Always spread `args` onto the component inside a custom `render`. This keeps Controls working.
-
 ---
 
-## 4. Args — What They Are and How to Use Them
+## 5. Args — Component Inputs
 
-**Args** are Storybook's way of defining the inputs to a component. They map directly to React props and drive the Controls panel.
+Args map to React props and drive the Controls panel. Three scopes, from specific to broad:
 
-When an arg's value changes, the component re-renders instantly — no page reload, no code change needed.
+| Scope | Where defined | Applies to |
+|-------|---------------|------------|
+| Story-level | `args` on the named export | That story only |
+| Component-level | `args` in the meta object | All stories in the file (overridable) |
+| Global | `.storybook/preview.ts` | Every story (use sparingly) |
 
-### Three levels of args:
-
-#### Story-level args (most common)
-Only apply to that specific story:
-
-```tsx
-export const Primary: Story = {
-  args: {
-    label: 'Confirm Order',
-    variant: 'primary',
-    size: 'md',
-  },
-};
-```
-
-#### Component-level args (defaults for all stories)
-Set in the meta object. Apply to every story unless overridden:
-
-```tsx
-const meta = {
-  component: Button,
-  args: {
-    // All Button stories start with these defaults
-    size: 'md',
-    disabled: false,
-  },
-} satisfies Meta<typeof Button>;
-```
-
-#### Global args (rare — avoid unless truly global)
-Defined in `.storybook/preview.ts`. Use for things like locale or theme that apply everywhere.
-
-### Composing args from other stories:
+### Composing Args
 
 ```tsx
 export const Primary: Story = {
-  args: {
-    label: 'Confirm',
-    variant: 'primary',
-  },
+  args: { label: 'Confirm', variant: 'primary' },
 };
 
 export const PrimaryLong: Story = {
   args: {
-    ...Primary.args,               // inherit from Primary
+    ...Primary.args,
     label: 'Confirm and save all changes to this work order',
   },
 };
 ```
 
-### Rules:
-- Keep args as **plain JSON-serialisable values** — strings, numbers, booleans, arrays, objects
-- Do not pass live functions or class instances as args (use `action()` from `@storybook/test` for callbacks)
-- Use `argTypes` in meta to customise how controls render (see Section 5)
+### Rules
+
+- Args must be **plain JSON-serialisable values** — strings, numbers, booleans, arrays, objects
+- Never pass live functions — use `action()` from `@storybook/test` for callbacks
+- Every story must have meaningful, representative args — no empty stories
 
 ---
 
-## 5. Controls — How to Expose Component Props
+## 6. Controls — Exposing Props in the UI
 
-The **Controls addon** auto-generates a UI panel from your component's TypeScript types. This lets anyone edit props without touching code.
-
-### Auto-generated controls:
-If you're using TypeScript, Storybook infers controls from your prop types automatically. No extra config needed for most cases.
-
-### Customising controls with `argTypes`:
+TypeScript types auto-generate controls. Customise with `argTypes` when needed:
 
 ```tsx
 const meta = {
@@ -210,60 +165,41 @@ const meta = {
         defaultValue: { summary: 'pending' },
       },
     },
-    colour: {
-      control: 'color',  // Shows a colour picker
-    },
-    onDismiss: {
-      action: 'dismissed',  // Logs to Actions panel when called
-    },
+    onDismiss: { action: 'dismissed' },
+    internalId: { table: { disable: true } },
   },
 } satisfies Meta<typeof StatusBadge>;
 ```
 
-### Common control types:
+### Control Types
+
 | Type | Use for |
 |------|---------|
-| `'text'` | Short string inputs |
+| `'text'` | Short strings |
 | `'number'` | Numeric values |
-| `'boolean'` | True/false toggles |
-| `'select'` | Enum / union types |
-| `'radio'` | Small sets of options |
-| `'color'` | Colour pickers (use tokens, not raw hex — see Section 11) |
+| `'boolean'` | Toggles |
+| `'select'` | Enums / union types |
+| `'radio'` | Small sets (2-4 options) |
+| `'color'` | Colour pickers — **must use design tokens, not hex** |
 | `'date'` | Date values |
 | `'object'` | Complex objects |
 
-### Hiding internal props:
-```tsx
-argTypes: {
-  internalId: { table: { disable: true } },
-}
-```
-
 ---
 
-## 6. Decorators — When and How to Use Them
+## 7. Decorators — Wrappers and Context
 
-A **decorator** wraps a story in extra rendering or context. Use them when a component needs a provider, a layout wrapper, or global context to display correctly.
+Decorators wrap stories with providers, layout, or context. Three scopes:
 
-### Adding spacing/layout:
+| Scope | Where | Priority |
+|-------|-------|----------|
+| Global | `.storybook/preview.ts` | Lowest (applied first) |
+| Component | `meta.decorators` | Middle |
+| Story | `story.decorators` | Highest (applied last) |
 
-```tsx
-const meta = {
-  component: ToastNotification,
-  decorators: [
-    (Story) => (
-      <div style={{ padding: '2rem', minHeight: '200px' }}>
-        <Story />
-      </div>
-    ),
-  ],
-} satisfies Meta<typeof ToastNotification>;
-```
-
-### Providing context (e.g., theme, router, auth):
+### Standard Sturij Decorator — Theme Provider
 
 ```tsx
-// .storybook/preview.tsx — applies to ALL stories
+// .storybook/preview.tsx
 import { ThemeProvider } from '../src/design-system/ThemeProvider';
 
 const preview: Preview = {
@@ -277,79 +213,43 @@ const preview: Preview = {
 };
 ```
 
-### Story-level decorator for one-off context:
+### When to Use
 
-```tsx
-export const WithSidebar: Story = {
-  decorators: [
-    (Story) => (
-      <AppShell>
-        <Story />
-      </AppShell>
-    ),
-  ],
-};
-```
+- Wrapping with context providers (Theme, Router, QueryClient)
+- Adding layout padding/background
+- Mocking the AppShell for page-level stories
+- Providing dark theme variant
 
-### Decorator scope (priority order — last wins):
-1. **Global** (`.storybook/preview.ts`) — applies to every story
-2. **Component** (meta `decorators`) — applies to all stories in that file
-3. **Story** (story `decorators`) — applies to one story only
+### When NOT to Use
 
-### When to use decorators:
-- ✅ Wrapping with a context provider (ThemeProvider, RouterProvider, QueryClient)
-- ✅ Adding layout padding/background when a component needs it
-- ✅ Mocking a page-level shell for full-page stories
-- ✅ Providing dark theme for dark mode stories
-
-### When NOT to use decorators:
-- ❌ Don't use decorators to add content that belongs in the story itself
-- ❌ Don't mutate global state inside a decorator
+- Adding content that belongs in the story itself
+- Mutating global state
 
 ---
 
-## 7. Play Functions — Interaction Testing
+## 8. Play Functions — Interaction Testing
 
-A **play function** is a script that runs automatically after the story renders. It simulates user interactions — clicks, typing, form submission — and lets you verify the component responds correctly.
-
-Use the `canvas` object (scoped Testing Library queries) and `userEvent` to interact with the DOM.
-
-### Basic example — form submission:
+Play functions run after render and simulate user interactions. They are your component-level integration tests.
 
 ```tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from '@storybook/test';
-import { WorkOrderForm } from './WorkOrderForm';
-
-const meta = {
-  component: WorkOrderForm,
-} satisfies Meta<typeof WorkOrderForm>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
 
 export const FilledAndSubmitted: Story = {
   play: async ({ canvas, userEvent }) => {
-    // Find the input by label
     const titleInput = canvas.getByLabelText('Work Order Title');
     await userEvent.type(titleInput, 'Replace kitchen worktop', { delay: 50 });
 
-    const prioritySelect = canvas.getByLabelText('Priority');
-    await userEvent.selectOptions(prioritySelect, 'high');
-
-    // Submit the form
     const submitButton = canvas.getByRole('button', { name: /submit/i });
     await userEvent.click(submitButton);
 
-    // Assert the outcome
     await expect(canvas.getByText('Work order saved')).toBeInTheDocument();
   },
 };
 ```
 
-### Querying outside the story canvas:
+### For Modals and Overlays
 
-For modals and dialogs that render outside the component root, import `screen` from `storybook/test`:
+Modals render outside the component root. Use `screen` from `storybook/test`:
 
 ```tsx
 import { screen } from 'storybook/test';
@@ -362,28 +262,32 @@ export const WithModal: Story = {
 };
 ```
 
-### When to write play functions:
-- ✅ Form validation (fill, submit, check errors)
-- ✅ Modal open/close interactions
-- ✅ Dropdown selection
-- ✅ Any story that depends on a multi-step user flow
-- ✅ Components with conditional rendering triggered by user action
+### Rules
 
-### Play function rules:
 - Always `await` userEvent calls — they are async
-- Use `canvas.getBy*` queries in preference to raw DOM selectors
-- Add assertions (`expect`) — a play function without assertions is just animation
-- Keep play functions focused on **one scenario per story**
+- Use `canvas.getBy*` over raw DOM selectors
+- Every play function must include at least one `expect` assertion
+- One scenario per story — don't combine multiple flows
+
+### When to Write Play Functions
+
+- Form validation flows
+- Modal open/close interactions
+- Dropdown selection behaviour
+- Multi-step user flows
+- Conditional rendering triggered by user action
+- **Drawer interactions** (Sturij AppShell drawers — test open, close, pin)
+- **Accordion expand/collapse** (test pin behaviour, auto-close siblings)
 
 ---
 
-## 8. Naming and Hierarchy in the Sidebar
+## 9. Sidebar Hierarchy
 
-Storybook's sidebar is your component library's navigation. Structure it so that anyone can find a component in under 5 seconds.
+Structure the sidebar so anyone can find a component in under 5 seconds.
 
-### Setting the title:
+### Path Convention
 
-Use `/` as a path separator to create hierarchy:
+Use `/` as separator. Maximum 3 levels deep.
 
 ```tsx
 const meta = {
@@ -392,275 +296,84 @@ const meta = {
 } satisfies Meta<typeof TextInput>;
 ```
 
-This renders as:
-```
-Components
-  └── Forms
-        └── TextInput
-              ├── Default
-              ├── Error
-              └── Disabled
-```
-
-### Sturij sidebar structure:
+### Sturij Sidebar Structure
 
 ```
 Design System
-  └── Tokens
-  └── Typography
+  ├── Tokens
+  ├── Typography
   └── Colours
 
 Components
-  └── Inputs
-        └── Button
-        └── TextInput
-        └── Select
-  └── Feedback
-        └── Toast
-        └── StatusBadge
-  └── Navigation
-        └── Sidebar
-        └── Breadcrumb
-  └── Data Display
-        └── Table
-        └── OrderCard
-  └── Overlays
-        └── Modal
-        └── Drawer
+  ├── Inputs
+  │   ├── Button
+  │   ├── TextInput
+  │   └── Select
+  ├── Feedback
+  │   ├── Toast
+  │   └── StatusBadge
+  ├── Navigation
+  │   ├── Sidebar
+  │   ├── Breadcrumb
+  │   └── Signpost
+  ├── Data Display
+  │   ├── Table
+  │   ├── OrderCard
+  │   └── Accordion
+  ├── Overlays
+  │   ├── Modal
+  │   └── Drawer
+  └── Layout
+      ├── AppShell
+      ├── PageStandard
+      └── SlotLayout
 
 Pages
-  └── Dashboard
-  └── Work Orders
+  ├── Canvas
+  ├── Pipeline
+  ├── Quotes
+  ├── Calendar
+  └── Knowledge
 ```
 
-### Naming rules:
-- Use `/` separators for nesting. Max 3 levels deep.
-- Use sentence case for story names in the sidebar: `Default`, `Loading state`, `With error`
-- Named exports use UpperCamelCase in code: `LoadingState` — Storybook splits this to `Loading State` automatically
-- Don't prefix story names with the component name: `Button/Primary` not `Button/ButtonPrimary`
+### Naming
 
-### Story name overrides:
-
-```tsx
-export const DarkBackground: Story = {
-  name: 'On dark background',  // overrides the sidebar label
-  args: { ... },
-};
-```
+- Sidebar labels use sentence case: `Default`, `Loading state`, `With error`
+- UpperCamelCase in code: `LoadingState` → renders as `Loading State`
+- Don't prefix with component name: `Button/Primary` not `Button/ButtonPrimary`
 
 ---
 
-## 9. Story Variants to Always Include
+## 10. Required Story Variants
 
-Every component story file **must** include these variants at minimum:
+Every component **must** include these:
 
-### Required stories:
+### Mandatory
 
-| Story name | Purpose |
-|------------|---------|
-| `Default` | The standard state, all required props, no special conditions |
-| `Disabled` | If the component supports a disabled state |
-| `Loading` | If the component has an async/loading state |
-| `Error` | If the component can display validation errors or failure states |
-| `Empty` | If the component renders differently when there's no data |
-| `DarkTheme` | The component on a dark background using theme tokens |
-| `AllVariants` | (Optional) A composite showing all size/variant options at once |
+| Story | Purpose |
+|-------|---------|
+| `Default` | Standard state, all required props, no special conditions |
+| `DarkTheme` | Component on dark background using Sturij dark tokens |
+| All interactive states | Disabled, Loading, Error, Empty — whichever apply |
 
-### For interactive components, also include:
-| Story name | Purpose |
-|------------|---------|
+### For Interactive Components
+
+| Story | Purpose |
+|-------|---------|
 | `Focused` | Keyboard focus state |
-| `Hovered` | Hover state (use `play` function if needed) |
-| `Active` | Active/pressed state |
+| `Hovered` | Hover state (use play function) |
+| `Active` | Pressed/active state |
 
-### Example — a complete Button story file:
+### Sturij-Specific Variants
 
-```tsx
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from './Button';
+| Story | Purpose |
+|-------|---------|
+| `InDrawer` | Component rendered inside an AppShell drawer context |
+| `Mobile` | Component at 375px viewport width |
+| `Tablet` | Component at 768px viewport width |
+| `WithRealData` | Component with production-representative data, not lorem ipsum |
 
-const meta = {
-  title: 'Components/Inputs/Button',
-  component: Button,
-  tags: ['autodocs'],
-  parameters: {
-    docs: {
-      description: {
-        component: 'Primary action trigger. Use for form submissions, confirmations, and primary page actions. One primary button per view.',
-      },
-    },
-  },
-  args: {
-    label: 'Confirm',
-    variant: 'primary',
-    size: 'md',
-  },
-} satisfies Meta<typeof Button>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {};
-
-export const Secondary: Story = {
-  args: { variant: 'secondary' },
-};
-
-export const Ghost: Story = {
-  args: { variant: 'ghost' },
-};
-
-export const Disabled: Story = {
-  args: { disabled: true },
-};
-
-export const Loading: Story = {
-  args: { loading: true },
-};
-
-export const Small: Story = {
-  args: { size: 'sm' },
-};
-
-export const Large: Story = {
-  args: { size: 'lg' },
-};
-
-export const DarkTheme: Story = {
-  parameters: {
-    backgrounds: { default: 'dark' },
-  },
-  decorators: [
-    (Story) => (
-      <div data-theme="dark" style={{ padding: '2rem' }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-```
-
----
-
-## 10. What NOT to Do — Anti-Patterns
-
-### ❌ Don't hardcode colours or values
-```tsx
-// BAD — hardcoded hex
-args: { backgroundColor: '#1a1a2e' }
-
-// GOOD — use design tokens
-args: { backgroundColor: 'var(--color-surface-inverse)' }
-```
-
-### ❌ Don't write stories without meaningful args
-```tsx
-// BAD — empty story tells you nothing
-export const MyStory: Story = {};
-
-// GOOD — give it real representative args
-export const Default: Story = {
-  args: {
-    title: 'Work Order #1042',
-    status: 'in-progress',
-    assignee: 'James M.',
-  },
-};
-```
-
-### ❌ Don't skip the Default story
-Every component needs a `Default` story. It's the baseline. Everything else is a variation.
-
-### ❌ Don't mock data inside the story component
-```tsx
-// BAD — story creates its own data
-export const WithData: Story = {
-  render: () => {
-    const data = generateFakeOrders(); // ❌
-    return <OrderTable orders={data} />;
-  },
-};
-
-// GOOD — pass data as args
-export const WithData: Story = {
-  args: {
-    orders: [
-      { id: '1042', title: 'Kitchen worktop', status: 'pending' },
-    ],
-  },
-};
-```
-
-### ❌ Don't use `render` when plain args will do
-Custom render functions break Controls. Only use `render` when a wrapper is genuinely required.
-
-### ❌ Don't write one giant story with internal state toggling
-```tsx
-// BAD — one story to rule them all
-export const AllStates: Story = {
-  render: () => {
-    const [state, setState] = useState('default');
-    return <Button state={state} onChange={setState} />;
-  },
-};
-
-// GOOD — separate stories per state
-export const Default: Story = { args: { state: 'default' } };
-export const Active: Story = { args: { state: 'active' } };
-export const Disabled: Story = { args: { state: 'disabled' } };
-```
-
-### ❌ Don't leave story descriptions empty
-Every story file must have a component description. Undescribed components are a maintenance liability.
-
-### ❌ Don't nest stories more than 3 levels deep
-`Components/Forms/Inputs/SpecialInput` is too deep. Flatten where possible.
-
-### ❌ Don't import from test utilities in production component code
-Story files and play functions can import from `@storybook/test`. The component itself cannot.
-
----
-
-## 11. Sturij-Specific Rules
-
-These rules are non-negotiable for the Sturij project. They exist to maintain design consistency, protect the token system, and keep the component library useful.
-
----
-
-### 11.1 Story file location
-
-**All component stories live in `src/stories/`.**
-
-```
-src/
-├── components/
-│   └── Button/
-│       └── Button.tsx
-├── stories/
-│   └── Button.stories.tsx   ← here
-```
-
-Do not place story files next to component files. The `src/stories/` folder is the single source of truth for all stories.
-
----
-
-### 11.2 Story before merge
-
-**Every new component gets a story before the PR merges.**
-
-This is a hard rule. No component enters the codebase without a corresponding story. If a PR adds a component without a story file, it is not ready to merge.
-
-The story file counts as part of the component's definition — it proves the component works in isolation and documents it for the team.
-
----
-
-### 11.3 Mandatory story variants
-
-Every story file **must** include these three variants at minimum:
-
-1. **`Default`** — the component in its standard, out-of-the-box state
-2. **All interactive states** — disabled, loading, error, focused, hover, active, empty — whichever apply
-3. **`DarkTheme`** — the component rendered on a dark background using the Sturij dark theme tokens
+### DarkTheme Pattern
 
 ```tsx
 export const DarkTheme: Story = {
@@ -678,55 +391,86 @@ export const DarkTheme: Story = {
 };
 ```
 
----
-
-### 11.4 No hardcoded colours
-
-**Never use raw colour values in stories.** Always reference Sturij design tokens.
+### Mobile Pattern
 
 ```tsx
-// ❌ BANNED
-args: {
-  background: '#0f172a',
-  borderColor: 'rgba(255,255,255,0.12)',
-}
-
-// ✅ CORRECT — use token references
-args: {
-  background: 'var(--color-surface-dark)',
-  borderColor: 'var(--color-border-subtle)',
-}
+export const Mobile: Story = {
+  name: 'Mobile (375px)',
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' },
+  },
+  args: { ...Default.args },
+};
 ```
-
-This applies to:
-- `args` values
-- Inline styles in decorators
-- Background parameters
-- Any hardcoded string that represents a colour
-
-If the token you need doesn't exist, raise it with the design system team. Don't invent a colour.
 
 ---
 
-### 11.5 Story descriptions are mandatory
+## 11. Anti-Patterns — What NOT to Do
 
-Every story file must have a component-level description in the meta. The description must explain:
-1. **What the component does** — its role and function
-2. **When to use it** — the correct context, and where it fits in the UI
+### Hardcoded Colours
+
+```tsx
+// BANNED — raw hex
+args: { backgroundColor: '#1a1a2e' }
+
+// CORRECT — design tokens
+args: { backgroundColor: 'var(--color-surface-inverse)' }
+```
+
+If the token doesn't exist, raise it with the design system. Don't invent colours.
+
+### Empty Stories
+
+```tsx
+// BANNED — tells you nothing
+export const MyStory: Story = {};
+
+// CORRECT — representative args
+export const Default: Story = {
+  args: { title: 'Work Order #1042', status: 'in-progress', assignee: 'James M.' },
+};
+```
+
+### Internal Data Generation
+
+```tsx
+// BANNED — story generates its own data
+render: () => { const data = generateFakeOrders(); return <OrderTable orders={data} />; }
+
+// CORRECT — data as args
+args: { orders: [{ id: '1042', title: 'Kitchen worktop', status: 'pending' }] }
+```
+
+### Other Violations
+
+| Don't | Do Instead |
+|-------|-----------|
+| Use `render` when plain args work | Spread args onto the component |
+| Write one mega-story with internal state | Separate stories per state |
+| Leave descriptions empty | Write what the component does and when to use it |
+| Nest deeper than 3 levels | Flatten the hierarchy |
+| Import from `@storybook/test` in production code | Only in story files and play functions |
+| Use `fontWeight: 700` or `600` in stories | Max `500` — Sturij uses Inter Light/Regular/Medium only |
+| Use emoji in component labels | 1px muted line icons or text labels only |
+
+---
+
+## 12. Descriptions — Mandatory Documentation
+
+Every story file must have a component-level description explaining **what** and **when**.
 
 ```tsx
 const meta = {
-  title: 'Components/Data Display/OrderCard',
-  component: OrderCard,
-  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
         component: `
-**OrderCard** displays a summary of a single work order — its title, status, assignee, and due date.
+**OrderCard** displays a summary of a single work order.
 
-Use on the Work Orders list view, the Dashboard summary panel, and anywhere a compact work order summary is needed. 
-Do not use for detailed work order views — use \`WorkOrderDetail\` for that.
+Use on the Work Orders list view, the Dashboard summary panel, and anywhere a compact 
+work order summary is needed. Do not use for detailed views — use WorkOrderDetail for that.
+
+**AppShell context:** Renders in the Pipeline drawer as an accordion row.
         `.trim(),
       },
     },
@@ -741,33 +485,174 @@ export const Overdue: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Displays when the due date has passed and the order is not yet complete. The status badge turns red and an overdue indicator is shown.',
+        story: 'Displays when the due date has passed. Status badge turns red. Overdue indicator shown.',
       },
     },
-  },
-  args: {
-    status: 'overdue',
-    dueDate: '2024-01-01',
   },
 };
 ```
 
 ---
 
-### 11.6 Story quality checklist (before merging)
+## 13. Sturij-Specific Rules
 
-Use this before every PR that includes story files:
+These are non-negotiable. They exist to maintain design consistency, protect the token system, and keep the component library useful.
 
-- [ ] Story file exists in `src/stories/`
-- [ ] `Default` story is present
-- [ ] All interactive states have stories
-- [ ] `DarkTheme` story is present
-- [ ] No hardcoded colour values anywhere in the story file
-- [ ] Component description is written and explains what + when
-- [ ] `tags: ['autodocs']` is set in meta
-- [ ] All args are meaningful and representative of real usage
-- [ ] TypeScript types are correct — no `any`, uses `satisfies Meta<typeof Component>`
+### 13.1 File Location
+
+All stories in `src/stories/`. Not alongside components. One location, one source of truth.
+
+### 13.2 Story Before Merge
+
+Every new component gets a story before the PR merges. No exceptions. The story is part of the component's definition — it proves the component works in isolation.
+
+**Holly must not merge any PR that adds a component without a corresponding story file.**
+
+### 13.3 No Hardcoded Colours
+
+Never use raw colour values anywhere in a story file — not in args, decorators, inline styles, or background parameters. Always use Sturij design tokens (`var(--color-*)` or Tailwind classes).
+
+### 13.4 AppShell Awareness
+
+Components in Sturij render inside the AppShell — drawers, slots, and the canvas area. Stories should demonstrate how the component behaves in these contexts:
+
+```tsx
+export const InDrawer: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ width: 360, background: 'var(--color-surface-drawer)', padding: 16 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+```
+
+### 13.5 Token Compliance
+
+Every visual property must reference the Sturij token system. This includes:
+
+| Property | Token pattern |
+|----------|--------------|
+| Background | `var(--color-surface-*)` or Tailwind `bg-surface-*` |
+| Text | `var(--color-text-*)` or Tailwind `text-*` |
+| Border | `var(--color-border-*)` or Tailwind `border-*` |
+| Spacing | Tailwind spacing scale (`p-4`, `gap-3`, `m-2`) |
+| Font weight | `300` (light), `400` (regular), `500` (medium) — never `600` or `700` |
+| Font family | `Inter` only — via the design system, never hardcoded |
+| Border radius | Token-defined values, not arbitrary pixels |
+
+### 13.6 Responsive Stories
+
+Every component that appears in the main content area must have stories at three breakpoints:
+
+| Breakpoint | Width | Story name |
+|-----------|-------|------------|
+| Mobile | 375px | `Mobile` |
+| Tablet | 768px | `Tablet` |
+| Desktop | 1440px | `Default` (this is the baseline) |
+
+Drawer components are constrained to drawer width (360px) and don't need responsive variants.
+
+### 13.7 Accessibility in Stories
+
+Every interactive component story must verify basic accessibility:
+
+```tsx
+export const AccessibleForm: Story = {
+  play: async ({ canvas }) => {
+    // Verify all form fields have labels
+    const inputs = canvas.getAllByRole('textbox');
+    for (const input of inputs) {
+      await expect(input).toHaveAccessibleName();
+    }
+    
+    // Verify buttons have accessible names
+    const buttons = canvas.getAllByRole('button');
+    for (const button of buttons) {
+      await expect(button).toHaveAccessibleName();
+    }
+  },
+};
+```
+
+### 13.8 Visual Regression with Chromatic
+
+Stories are the source material for Chromatic visual regression tests. This means:
+
+- Every meaningful visual state must be a separate story (not toggled via internal state)
+- Stories must be deterministic — no randomised data, no `Date.now()`, no animation states
+- Use `parameters.chromatic.delay` for components that animate on mount
+- Use `parameters.chromatic.disableSnapshot` for interaction-only stories
+
+```tsx
+export const AnimatedEntry: Story = {
+  parameters: {
+    chromatic: { delay: 500 }, // Wait for animation to complete
+  },
+};
+
+export const InteractionOnly: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: true }, // Don't screenshot this one
+  },
+};
+```
 
 ---
 
-*Last updated: April 2026 — maintained by the Sturij platform team.*
+## 14. Quality Checklist — Before Every PR
+
+Use this before merging any PR that includes story files:
+
+- [ ] Story file exists in `src/stories/`
+- [ ] File named `ComponentName.stories.tsx` (PascalCase, `.stories.tsx`)
+- [ ] `Default` story is present with meaningful args
+- [ ] All interactive states have stories (disabled, loading, error, empty)
+- [ ] `DarkTheme` story is present
+- [ ] `Mobile` story is present (for content-area components)
+- [ ] `InDrawer` story is present (for drawer components)
+- [ ] No hardcoded colour values anywhere in the file
+- [ ] All visual properties use Sturij design tokens
+- [ ] Component description written (what + when + AppShell context)
+- [ ] `tags: ['autodocs']` is set in meta
+- [ ] TypeScript correct — `satisfies Meta<typeof Component>`, no `any`
+- [ ] Play functions include assertions
+- [ ] No `fontWeight` above `500`
+- [ ] No emoji in labels — text or 1px line icons only
+- [ ] Args represent real production data, not lorem ipsum
+- [ ] Chromatic considerations applied (delay, disable where needed)
+
+---
+
+## 15. Integration with Holly Workflow
+
+### Before Holly Builds a Component
+
+The sprint brief must specify:
+- Which Page Standard pattern the component follows
+- Which existing components to reuse (not reinvent)
+- Which tokens are in scope
+- The sidebar path for the story (`title` in meta)
+
+### After Holly Builds a Component
+
+Holly must:
+1. Create the story file in `src/stories/`
+2. Include all mandatory variants (Default, DarkTheme, interactive states, Mobile)
+3. Write the component description
+4. Run `npm run storybook` locally to verify
+5. Screenshot the Storybook output for Mark's review
+
+### Holly Must NOT
+
+- Create a component without a story
+- Skip DarkTheme or Mobile variants
+- Use hardcoded colours or arbitrary values
+- Use `fontWeight` above 500
+- Skip the component description
+- Merge without Mark's visual sign-off
+
+---
+
+*This document is enforced across all Sturij component development. It is referenced by the Holly Rules Engine, sprint briefs, and PR review checklists. Update when Storybook version changes or new patterns emerge.*

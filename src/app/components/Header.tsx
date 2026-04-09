@@ -1,5 +1,5 @@
 import { Search, Sun, Moon, User, CreditCard, FileText, LogOut, Shield, Palette, Zap, Database, Key, Mail, Users, BarChart3, Code, Plug, Webhook, X, AlertCircle, Clock, CheckCircle, Settings } from 'lucide-react';
-import logoWhite from '../../assets/logo-white.png';
+import logoWhite from '../../assets/logo-full-white.png';
 import { AnimatedToggle } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -185,7 +185,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 onClick={() => setShowSearch(true)}
                 className="h-8 w-8 shell-icon-btn"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-7 h-7" strokeWidth={1.5} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Search</TooltipContent>
@@ -202,7 +202,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 onClick={() => setShowSettingsMenu(!showSettingsMenu)}
                 className="h-8 w-8 shell-icon-btn"
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-7 h-7" strokeWidth={1.5} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Settings</TooltipContent>
@@ -364,24 +364,13 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           )}
         </div>
 
-        {/* Panel collapse toggle */}
-        <Button 
-          variant="ghost" 
-          size="icon"
-          onClick={onTogglePanelCollapse}
-          className="h-8 w-8 shell-icon-btn"
-          title={isPanelCollapsed ? 'Expand Panel' : 'Collapse Panel'}
-        >
-          <AnimatedToggle isOpen={!isPanelCollapsed} direction="vertical" size={18} />
-        </Button>
-
         {/* User Avatar Dropdown — far right */}
         <div ref={userMenuRef} className="relative ml-auto">
           <button 
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="relative flex items-center hover:opacity-80 transition-opacity"
           >
-            <Avatar className="w-10 h-10 shell-accent-bg font-medium flex items-center justify-center cursor-pointer">
+            <Avatar className="w-10 h-10 shell-avatar font-medium flex items-center justify-center cursor-pointer">
               {userInitials}
             </Avatar>
             {/* Unread notification dot */}

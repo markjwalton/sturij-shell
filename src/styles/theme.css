@@ -53,6 +53,15 @@
 .shell-icon-btn      { color: var(--shell-icon); transition: color 0.15s; }
 .shell-icon-btn:hover { color: var(--shell-accent); }
 
+/* Sidebar toggle dim state */
+.shell-accent-dim-text { color: var(--shell-accent); opacity: 0.5; }
+
+/* Watermark label */
+.shell-watermark-text { color: var(--shell-text-muted); opacity: 0.25; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* Avatar */
+.shell-avatar { background: var(--shell-accent-faint); border: 1px solid var(--shell-accent); color: var(--shell-accent); }
+
 /* Nav active state */
 .shell-nav-active      { background: var(--shell-accent-faint); border-left: 2px solid var(--shell-accent); }
 .shell-nav-active-text { color: var(--shell-accent); }
@@ -296,8 +305,10 @@
   transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
-  opacity: 0.04;
+  opacity: 0.025;
   pointer-events: none;
   user-select: none;
   z-index: 0;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
 }

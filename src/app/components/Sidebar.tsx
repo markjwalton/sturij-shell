@@ -46,7 +46,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
               <TooltipTrigger asChild>
                 <button
                   onClick={onToggle}
-                  className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-accent-text shell-icon-btn"
+                  className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-accent-text"
                 >
                   <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} />
                 </button>
@@ -56,17 +56,10 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
           ) : (
             <button
               onClick={onToggle}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-icon-btn shell-accent-text"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-accent-dim-text"
             >
               <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} className="flex-shrink-0" />
-              <motion.span
-                initial={false}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                Collapse
-              </motion.span>
+              <span className="shell-watermark-text">Hide</span>
             </button>
           )}
         </div>

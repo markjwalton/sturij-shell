@@ -51,6 +51,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                       style={{
                         width: 48, height: 48,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        borderRadius: 8,
                         background: item.active ? 'var(--shell-accent)' : 'none',
                         border: 'none', cursor: 'pointer',
                         color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',
@@ -85,6 +86,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                   width: '100%',
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 16px',
+                  borderRadius: 8,
                   background: item.active ? 'var(--shell-accent)' : 'none',
                   border: 'none', cursor: 'pointer',
                   color: item.active ? 'var(--shell-background)' : 'var(--shell-text-muted)',

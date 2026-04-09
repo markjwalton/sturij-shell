@@ -175,7 +175,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
         {/* Search - Collapsible */}
         {showSearch ? (
           <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 shell-icon" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 shell-icon" strokeWidth={1.5} />
             <Input
               ref={searchRef}
               placeholder="Search anything..."
@@ -406,13 +406,13 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       const iconColor = n.type === 'critical' ? 'text-red-500' : n.type === 'action' ? 'text-amber-500' : 'text-green-500';
                       return (
                         <div key={n.id} className="px-4 py-2 flex items-start gap-2 shell-menu-item transition-colors">
-                          <IconComponent className={`w-4 h-4 mt-0.5 flex-shrink-0 ${iconColor}`} />
+                          <IconComponent className={`w-5 h-5 mt-0.5 flex-shrink-0 ${iconColor}`} strokeWidth={1.5} />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium shell-text truncate">{n.title}</p>
                             <p className="text-xs shell-text-muted">{n.time}</p>
                           </div>
                           <button onClick={(e) => { e.stopPropagation(); dismissNotification(n.id); }} className="p-1 rounded hover:bg-[var(--shell-border)]">
-                            <X className="w-3 h-3 shell-icon" />
+                            <X className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                           </button>
                         </div>
                       );
@@ -432,33 +432,33 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                   onClick={toggleDarkMode}
                   className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors"
                 >
-                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  {isDarkMode ? <Sun className="w-5 h-5" strokeWidth={1.5} /> : <Moon className="w-5 h-5" strokeWidth={1.5} />}
                   {isDarkMode ? 'Switch to Green' : 'Switch to Navy'}
                 </button>
               </div>
               
               <div className="py-2">
                 <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
-                  <User className="w-4 h-4" />
+                  <User className="w-5 h-5" strokeWidth={1.5} />
                   My Profile
                 </button>
                 <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
-                  <Settings className="w-4 h-4" />
+                  <Settings className="w-5 h-5" strokeWidth={1.5} />
                   Preferences
                 </button>
                 <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
-                  <FileText className="w-4 h-4" />
+                  <FileText className="w-5 h-5" strokeWidth={1.5} />
                   Documents
                 </button>
                 <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
-                  <CreditCard className="w-4 h-4" />
+                  <CreditCard className="w-5 h-5" strokeWidth={1.5} />
                   Billing
                 </button>
               </div>
 
               <div className="shell-border-t py-2">
                 <button className="w-full px-4 py-2 text-left text-sm text-red-500 shell-menu-item flex items-center gap-3 transition-colors">
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-5 h-5" strokeWidth={1.5} />
                   Sign Out
                 </button>
               </div>

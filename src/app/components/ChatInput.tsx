@@ -98,7 +98,7 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all shell-input-field">
           <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-[var(--shell-border)]">
-            <Paperclip className="w-5 h-5 shell-text-muted" />
+            <Paperclip className="w-5 h-5 shell-text-muted" strokeWidth={1.5} />
           </Button>
           <Input
             value={message}
@@ -120,7 +120,7 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
               }
             `}
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-5 h-5" strokeWidth={1.5} />
           </Button>
         </div>
         
@@ -154,9 +154,9 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
             className="h-7 w-7 flex-shrink-0 hover:bg-[var(--shell-border)]"
           >
             {isPaused ? (
-              <Play className="w-3.5 h-3.5 shell-text-muted" />
+              <Play className="w-5 h-5 shell-text-muted" strokeWidth={1.5} />
             ) : (
-              <Pause className="w-3.5 h-3.5 shell-text-muted" />
+              <Pause className="w-5 h-5 shell-text-muted" strokeWidth={1.5} />
             )}
           </Button>
         </div>

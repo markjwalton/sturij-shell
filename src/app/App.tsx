@@ -77,7 +77,7 @@ export default function App() {
             onToggle={() => setIsSidebarCollapsed(v => !v)}
           />
 
-          <main className="flex-1 flex flex-col relative overflow-hidden shell-hero-glow">
+          <main className={`flex-1 flex flex-col relative overflow-hidden shell-hero-glow transition-all duration-300 ${isPanelCollapsed ? 'pr-16' : 'pr-[420px]'}`}>
             <img 
               src={logoWatermark} 
               alt="" 
@@ -110,15 +110,15 @@ export default function App() {
             </div>
 
           </main>
-
-          {/* Right artifact panel */}
-          <ArtifactStack
-            ref={artifactStackRef}
-            artifacts={artifacts}
-            isCollapsed={isPanelCollapsed}
-            onToggleCollapse={() => setIsPanelCollapsed(!isPanelCollapsed)}
-          />
         </div>
+
+        {/* Right artifact panel */}
+        <ArtifactStack
+          ref={artifactStackRef}
+          artifacts={artifacts}
+          isCollapsed={isPanelCollapsed}
+          onToggleCollapse={() => setIsPanelCollapsed(!isPanelCollapsed)}
+        />
 
         <div className="border-t shrink-0">
           <ChatInput onSendMessage={handleSendMessage} />

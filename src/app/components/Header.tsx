@@ -217,152 +217,152 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           
           {showSettingsMenu && (
             <div className="fixed right-4 top-16 w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden shell-surface shell-border">
-              <div className="p-6 border-b border-gray-200 dark:border-gray-800">
-                <h3 className="font-semibold text-lg text-gray-900 dark:text-white">System Settings</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Configure your workspace and tools</p>
+              <div className="p-6 shell-border-b">
+                <h3 className="font-semibold text-lg shell-text">System Settings</h3>
+                <p className="text-sm shell-text-muted mt-1">Configure your workspace and tools</p>
               </div>
               
-              <div className="grid grid-cols-2 gap-px bg-gray-200 dark:bg-gray-800">
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+              <div className="grid grid-cols-2 gap-px shell-bg">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
-                      <User className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <User className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Profile Settings</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Manage your account details and preferences</p>
+                      <h4 className="font-medium shell-text mb-1">Profile Settings</h4>
+                      <p className="text-xs shell-text-muted">Manage your account details and preferences</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
-                      <Shield className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Shield className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Security & Privacy</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">2FA, passwords, and access control</p>
+                      <h4 className="font-medium shell-text mb-1">Security & Privacy</h4>
+                      <p className="text-xs shell-text-muted">2FA, passwords, and access control</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
-                      <Users className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Users className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Team Management</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Invite members, roles, and permissions</p>
+                      <h4 className="font-medium shell-text mb-1">Team Management</h4>
+                      <p className="text-xs shell-text-muted">Invite members, roles, and permissions</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
-                      <Palette className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Palette className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Appearance</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Themes, colors, and display options</p>
+                      <h4 className="font-medium shell-text mb-1">Appearance</h4>
+                      <p className="text-xs shell-text-muted">Themes, colors, and display options</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
-                      <Database className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Database className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Data Management</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Import, export, and backup your data</p>
+                      <h4 className="font-medium shell-text mb-1">Data Management</h4>
+                      <p className="text-xs shell-text-muted">Import, export, and backup your data</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform">
-                      <Zap className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Zap className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">AI Skills & Training</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Configure AI behavior and custom skills</p>
+                      <h4 className="font-medium shell-text mb-1">AI Skills & Training</h4>
+                      <p className="text-xs shell-text-muted">Configure AI behavior and custom skills</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
-                      <Plug className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Plug className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Integrations</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Connect third-party apps and services</p>
+                      <h4 className="font-medium shell-text mb-1">Integrations</h4>
+                      <p className="text-xs shell-text-muted">Connect third-party apps and services</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
-                      <Key className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Key className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">API Keys</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Manage developer access tokens</p>
+                      <h4 className="font-medium shell-text mb-1">API Keys</h4>
+                      <p className="text-xs shell-text-muted">Manage developer access tokens</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
-                      <Webhook className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Webhook className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Webhooks</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Set up real-time event notifications</p>
+                      <h4 className="font-medium shell-text mb-1">Webhooks</h4>
+                      <p className="text-xs shell-text-muted">Set up real-time event notifications</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
-                      <Mail className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Mail className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Notifications</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Email, SMS, and in-app alerts</p>
+                      <h4 className="font-medium shell-text mb-1">Notifications</h4>
+                      <p className="text-xs shell-text-muted">Email, SMS, and in-app alerts</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
-                      <BarChart3 className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <BarChart3 className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Analytics & Reports</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">Track usage, insights, and metrics</p>
+                      <h4 className="font-medium shell-text mb-1">Analytics & Reports</h4>
+                      <p className="text-xs shell-text-muted">Track usage, insights, and metrics</p>
                     </div>
                   </div>
                 </button>
 
-                <button className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group">
+                <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
-                      <Code className="w-5 h-5" />
+                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                      <Code className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white mb-1">Developer Tools</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">API docs, sandbox, and debugging</p>
+                      <h4 className="font-medium shell-text mb-1">Developer Tools</h4>
+                      <p className="text-xs shell-text-muted">API docs, sandbox, and debugging</p>
                     </div>
                   </div>
                 </button>

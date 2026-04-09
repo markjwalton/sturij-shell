@@ -154,9 +154,9 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
       <div className="flex items-center gap-3">
         <div className="flex items-center h-full">
           {isSidebarCollapsed ? (
-            <img src={logoIcon} alt="Sturij" className="h-10 w-10" />
+            <img src={logoIcon} alt="Sturij" className="h-12 w-12" />
           ) : (
-            <img src={logoWhite} alt="Sturij" className="h-10 w-auto" />
+            <img src={logoWhite} alt="Sturij" className="h-12 w-auto" />
           )}
         </div>
       </div>

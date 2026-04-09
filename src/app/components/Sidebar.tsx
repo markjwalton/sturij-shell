@@ -1,5 +1,5 @@
 import { MessageSquare, TrendingUp, FileText, Calendar, Brain } from 'lucide-react';
-import { AnimatedToggle } from './icons/CollapseIcons';
+import { SidebarToggle } from './icons/CollapseIcons';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import { motion } from 'motion/react';
 
@@ -48,7 +48,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
                   onClick={onToggle}
                   className="w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all shell-accent-text"
                 >
-                  <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} />
+                  <SidebarToggle isOpen={false} size={28} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right">Expand</TooltipContent>
@@ -58,7 +58,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
               onClick={onToggle}
               className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all shell-accent-dim-text"
             >
-              <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={28} className="flex-shrink-0" />
+              <SidebarToggle isOpen={true} size={28} className="flex-shrink-0" />
               <span className="shell-watermark-text">Hide</span>
             </button>
           )}

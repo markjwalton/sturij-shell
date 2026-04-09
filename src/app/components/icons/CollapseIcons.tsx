@@ -2,6 +2,7 @@
 // Matches the panel control aesthetic from the design references
 // AnimatedChevron handles directional rotation via Framer Motion
 
+import React from 'react';
 import { motion } from 'motion/react';
 
 interface IconProps {
@@ -126,5 +127,59 @@ export function DrawerCloseDown({ className, size = 16 }: IconProps) {
       <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       <line x1="4" y1="13" x2="12" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
+  );
+}
+
+// Sidebar toggle — animated rail + chevron with pulse and hover bounce
+interface SidebarToggleProps {
+  isOpen: boolean;
+  className?: string;
+  size?: number;
+}
+
+export function SidebarToggle({ isOpen, className, size = 28 }: SidebarToggleProps) {
+  const [hovered, setHovered] = React.useState(false);
+
+  const chevronX = isOpen
+    ? hovered ? -3 : 0
+    : hovered ? 3 : 0;
+
+  const chevronRotation = isOpen ? 180 : 0;
+
+  return (
+    <motion.svg
+      width={size}
+      height={size}
+      viewBox="0 0 28 28"
+      fill="none"
+      className={className}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      style={{ color: 'var(--shell-accent)' }}
+    >
+      <motion.line
+        x1="4" y1="4" x2="4" y2="24"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        animate={{ opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.g
+        animate={{ x: chevronX, rotate: chevronRotation }}
+        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+        style={{ transformOrigin: '16px 14px', transformBox: 'fill-box' as React.CSSProperties['transformBox'] }}
+      >
+        <motion.path
+          d="M12 8L18 14L12 20"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          animate={{ opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+        />
+      </motion.g>
+    </motion.svg>
   );
 }

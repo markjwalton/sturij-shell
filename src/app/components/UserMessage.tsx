@@ -25,7 +25,7 @@ export function UserMessage({ message, timestamp, userInitials }: UserMessagePro
             {message}
           </div>
         </motion.div>
-        <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
+        <div className="text-xs shell-text-muted flex items-center gap-2">
           <span>{timestamp}</span>
         </div>
       </div>

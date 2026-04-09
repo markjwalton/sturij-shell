@@ -179,7 +179,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
             <Input
               ref={searchRef}
               placeholder="Search anything..."
-              className="pl-9 bg-gray-100 border-gray-200 text-gray-900 placeholder:text-gray-500 focus-visible:ring-gray-300 focus-visible:border-gray-400"
+              className="pl-9 shell-search-input focus-visible:ring-[var(--shell-accent-faint)] focus-visible:border-[var(--shell-text-muted)]"
               onBlur={() => setShowSearch(false)}
             />
           </div>
@@ -388,16 +388,16 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
           {showUserMenu && (
             <div className="fixed right-4 top-16 w-72 rounded-xl shadow-xl z-[200] overflow-hidden shell-surface shell-border">
-              <div className="p-3 border-b border-gray-200 dark:border-gray-800">
-                <p className="font-medium text-gray-900 dark:text-white">{userName}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">user@sturij.ai</p>
+              <div className="p-3 shell-border-b">
+                <p className="font-medium shell-text">{userName}</p>
+                <p className="text-xs shell-text-muted mt-0.5">user@sturij.ai</p>
               </div>
 
               {/* Notifications section */}
               {notifications.length > 0 && (
-                <div className="border-b border-gray-200 dark:border-gray-800">
+                <div className="shell-border-b">
                   <div className="px-4 py-2 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Notifications</span>
+                    <span className="text-xs font-semibold shell-text-muted uppercase tracking-wider">Notifications</span>
                     <span className="text-xs shell-accent-text font-medium">{unreadCount} new</span>
                   </div>
                   <div className="max-h-48 overflow-y-auto">
@@ -405,13 +405,13 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       const IconComponent = n.type === 'critical' ? AlertCircle : n.type === 'action' ? Clock : CheckCircle;
                       const iconColor = n.type === 'critical' ? 'text-red-500' : n.type === 'action' ? 'text-amber-500' : 'text-green-500';
                       return (
-                        <div key={n.id} className="px-4 py-2 flex items-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        <div key={n.id} className="px-4 py-2 flex items-start gap-2 shell-menu-item transition-colors">
                           <IconComponent className={`w-4 h-4 mt-0.5 flex-shrink-0 ${iconColor}`} />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{n.title}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{n.time}</p>
+                            <p className="text-sm font-medium shell-text truncate">{n.title}</p>
+                            <p className="text-xs shell-text-muted">{n.time}</p>
                           </div>
-                          <button onClick={(e) => { e.stopPropagation(); dismissNotification(n.id); }} className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
+                          <button onClick={(e) => { e.stopPropagation(); dismissNotification(n.id); }} className="p-1 rounded hover:bg-[var(--shell-border)]">
                             <X className="w-3 h-3 shell-icon" />
                           </button>
                         </div>
@@ -419,7 +419,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                     })}
                   </div>
                   {notifications.length > 3 && (
-                    <button className="w-full px-4 py-2 text-xs text-center shell-accent-text hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <button className="w-full px-4 py-2 text-xs text-center shell-accent-text shell-menu-item transition-colors">
                       View all {notifications.length} notifications
                     </button>
                   )}
@@ -427,10 +427,10 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
               )}
 
               {/* Theme toggle */}
-              <div className="border-b border-gray-200 dark:border-gray-800 py-1">
+              <div className="shell-border-b py-1">
                 <button 
                   onClick={toggleDarkMode}
-                  className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors"
                 >
                   {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                   {isDarkMode ? 'Switch to Green' : 'Switch to Navy'}
@@ -438,26 +438,26 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
               </div>
               
               <div className="py-2">
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
+                <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
                   <User className="w-4 h-4" />
                   My Profile
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
+                <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
                   <Settings className="w-4 h-4" />
                   Preferences
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
+                <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
                   <FileText className="w-4 h-4" />
                   Documents
                 </button>
-                <button className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
+                <button className="w-full px-4 py-2 text-left text-sm shell-text shell-menu-item flex items-center gap-3 transition-colors">
                   <CreditCard className="w-4 h-4" />
                   Billing
                 </button>
               </div>
 
-              <div className="border-t border-gray-200 dark:border-gray-800 py-2">
-                <button className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors">
+              <div className="shell-border-t py-2">
+                <button className="w-full px-4 py-2 text-left text-sm text-red-500 shell-menu-item flex items-center gap-3 transition-colors">
                   <LogOut className="w-4 h-4" />
                   Sign Out
                 </button>

@@ -153,10 +153,9 @@ export function SidebarToggle({ isOpen, className, size = 28 }: SidebarTogglePro
       height={size}
       viewBox="0 0 28 28"
       fill="none"
-      className={className}
+      className={`${className ?? ''} shell-accent-text`}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      style={{ color: 'var(--shell-accent)' }}
     >
       {/* Vertical rail — left-aligned, thick enough to be visible, breathing pulse */}
       <motion.line

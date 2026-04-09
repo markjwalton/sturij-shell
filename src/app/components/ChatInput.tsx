@@ -97,15 +97,15 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
       <div className="p-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all shell-input-field">
-          <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <Paperclip className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <Button variant="ghost" size="icon" className="flex-shrink-0 hover:bg-[var(--shell-border)]">
+            <Paperclip className="w-5 h-5 shell-text-muted" />
           </Button>
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyPress}
             placeholder={placeholder}
-            className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-0 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-gray-900 dark:text-white"
+            className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 px-0 placeholder:text-[var(--shell-text-muted)] shell-text"
           />
           <Button
             onClick={handleSend}
@@ -115,8 +115,8 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
               rounded-full flex-shrink-0 transition-all
               ${
                 message.trim()
-                  ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md hover:shadow-lg'
-                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-600 cursor-not-allowed'
+                  ? 'shell-accent-bg shadow-md hover:shadow-lg'
+                  : 'shell-send-disabled'
               }
             `}
           >
@@ -151,12 +151,12 @@ export function ChatInput({ onSendMessage, placeholder = 'Ask anything or give a
             variant="ghost"
             size="icon"
             onClick={() => setIsPaused(!isPaused)}
-            className="h-7 w-7 flex-shrink-0 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="h-7 w-7 flex-shrink-0 hover:bg-[var(--shell-border)]"
           >
             {isPaused ? (
-              <Play className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+              <Play className="w-3.5 h-3.5 shell-text-muted" />
             ) : (
-              <Pause className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+              <Pause className="w-3.5 h-3.5 shell-text-muted" />
             )}
           </Button>
         </div>

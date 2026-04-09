@@ -9,7 +9,7 @@ import { ArtifactStack, ArtifactStackHandle } from './components/ArtifactStack';
 import { TooltipProvider } from './components/ui/tooltip';
 import { useIsMobileOrTablet } from './hooks/useMediaQuery';
 import { MobileAppShell } from './components/MobileAppShell';
-import { LayoutDashboard, TrendingUp, Brain, Users } from 'lucide-react';
+// lucide icons removed — artifacts are empty shells
 import logoWatermark from '../assets/logo-white.png';
 
 interface Message {
@@ -36,47 +36,9 @@ export default function App() {
   const artifactStackRef = useRef<ArtifactStackHandle>(null);
 
   const artifacts = [
-    {
-      id: 'pipeline',
-      title: 'Pipeline',
-      badge: 'Live',
-      badgeColor: 'bg-teal-900/40 text-teal-300',
-      icon: <TrendingUp className="w-4 h-4 text-teal-400" />,
-      isExpanded: true,
-      content: (
-        <div className="space-y-2 text-sm text-gray-400 p-2">
-          <div className="flex justify-between"><span>New leads</span><span className="text-white font-medium">2</span></div>
-          <div className="flex justify-between"><span>In quote</span><span className="text-white font-medium">1</span></div>
-          <div className="flex justify-between"><span>Customers</span><span className="text-white font-medium">634</span></div>
-        </div>
-      ),
-    },
-    {
-      id: 'knowledge',
-      title: 'Knowledge',
-      badge: 'AI',
-      badgeColor: 'bg-purple-900/40 text-purple-300',
-      icon: <Brain className="w-4 h-4 shell-icon" strokeWidth={1.5} />,
-      isExpanded: false,
-      content: (
-        <div className="text-sm text-gray-400 p-2">
-          <p>8 entities · 16 docs · 83 chunks</p>
-        </div>
-      ),
-    },
-    {
-      id: 'operations',
-      title: 'Operations',
-      badge: 'Real-time',
-      badgeColor: 'bg-blue-900/40 text-blue-300',
-      icon: <Users className="w-4 h-4 text-blue-400" />,
-      isExpanded: false,
-      content: (
-        <div className="text-sm text-gray-400 p-2">
-          <p>436 contacts · 97 in Engage</p>
-        </div>
-      ),
-    },
+    { id: '1', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
+    { id: '2', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
+    { id: '3', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
   ];
 
   const handleSendMessage = (content: string) => {

@@ -117,7 +117,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                 <Tooltip key={artifact.id}>
                   <TooltipTrigger asChild>
                     <button
-                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all shell-icon hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700 relative"
+                      className="w-12 h-12 flex items-center justify-center rounded-lg transition-all shell-icon hover:bg-[var(--shell-border)] hover:shadow-sm border border-transparent hover:border-[var(--shell-border)] relative"
                     >
                       <span className="shell-icon">{artifact.icon || <Layers className="w-5 h-5" />}</span>
                       <GripVertical className="w-3 h-3 shell-icon absolute right-0.5 top-1/2 -translate-y-1/2 opacity-50" />
@@ -127,7 +127,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                     <div className="text-xs">
                       <div className="font-semibold">{artifact.title}</div>
                       {artifact.badge && (
-                        <div className="text-gray-400 mt-0.5">{artifact.badge}</div>
+                        <div className="shell-text-muted mt-0.5">{artifact.badge}</div>
                       )}
                     </div>
                   </TooltipContent>
@@ -186,7 +186,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                       variant="ghost"
                       size="icon"
                       onClick={() => toggleCardExpansion(artifact.id)}
-                      className="h-7 w-7 hover:bg-gray-200 dark:hover:bg-gray-700 flex-shrink-0"
+                      className="h-7 w-7 hover:bg-[var(--shell-border)] flex-shrink-0"
                     >
                       {artifact.isExpanded ? (
                         <AnimatedToggle isOpen={true} direction="vertical" size={14} />

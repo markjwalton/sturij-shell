@@ -39,6 +39,14 @@
 .shell-border-l     { border-left: 1px solid var(--shell-border); }
 .shell-border-b     { border-bottom: 1px solid var(--shell-border); }
 .shell-border-t     { border-top: 1px solid var(--shell-border); }
+.shell-border-r     { border-right: 1px solid var(--shell-border); }
+.shell-menu-item    { color: var(--shell-text-primary); }
+.shell-menu-item:hover { background: var(--shell-accent-faint); }
+.shell-search-input { background: var(--shell-surface); border-color: var(--shell-border); color: var(--shell-text-primary); }
+.shell-search-input::placeholder { color: var(--shell-text-muted); }
+.shell-send-disabled { background: var(--shell-border); color: var(--shell-text-muted); cursor: not-allowed; }
+.shell-action-secondary { border: 1px solid var(--shell-border); background: var(--shell-surface); color: var(--shell-text-primary); }
+.shell-action-secondary:hover { border-color: var(--shell-text-muted); }
 .shell-text         { color: var(--shell-text-primary); }
 .shell-text-muted   { color: var(--shell-text-muted); }
 .shell-accent-text  { color: var(--shell-accent); }

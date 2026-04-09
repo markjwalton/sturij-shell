@@ -28,19 +28,12 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
 
   return (
     <aside
-      className="shell-panel-depth"
-      style={{
-        width: isCollapsed ? '64px' : '240px',
-        borderRight: '1px solid var(--shell-border)',
-        flexShrink: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'width 0.3s ease',
-      }}
+      className="shell-panel-depth shell-border-r flex flex-col shrink-0 transition-[width] duration-300 ease-in-out"
+      style={{ width: isCollapsed ? '64px' : '240px' }}
     >
       {/* Collapse Toggle */}
-      <nav style={{ flex: 1, padding: '8px 8px 8px', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: isCollapsed ? 'center' : 'stretch', marginBottom: 4 }}>
+      <nav className="flex-1 p-2 overflow-hidden">
+        <div className={`flex flex-col mb-1 ${isCollapsed ? 'items-center' : 'items-stretch'}`}>
           {isCollapsed ? (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -64,7 +57,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
         </div>
 
       {/* Navigation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: isCollapsed ? 'center' : 'stretch' }}>
+        <div className={`flex flex-col gap-1 ${isCollapsed ? 'items-center' : 'items-stretch'}`}>
           {navItems.map((item) => {
             const Icon = item.icon;
 
@@ -103,7 +96,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
                   initial={false}
                   animate={{ opacity: isCollapsed ? 0 : 1 }}
                   transition={{ duration: 0.2 }}
-                  style={{ whiteSpace: 'nowrap' }}
+                  className="whitespace-nowrap"
                 >
                   {item.label}
                 </motion.span>

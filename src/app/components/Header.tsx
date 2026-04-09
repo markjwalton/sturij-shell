@@ -137,7 +137,10 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
   }, [showNotifications]);
 
   useEffect(() => {
-    // Check initial dark mode preference
+    // Always start in dark (navy) mode
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('theme-green');
+    setIsDarkMode(true);
     const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDarkMode(darkModeQuery.matches || document.documentElement.classList.contains('dark'));
 
@@ -178,8 +181,16 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
   const toggleDarkMode = () => {
     const html = document.documentElement;
-    html.classList.toggle('dark');
-    setIsDarkMode(html.classList.contains('dark'));
+    const isGreen = html.classList.contains('theme-green');
+    if (isGreen) {
+      html.classList.remove('theme-green');
+      html.classList.add('dark');
+      setIsDarkMode(true);
+    } else {
+      html.classList.remove('dark');
+      html.classList.add('theme-green');
+      setIsDarkMode(false);
+    }
   };
 
   return (

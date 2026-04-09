@@ -111,6 +111,7 @@ export default function App() {
             activeView={activeView}
             onNavigate={setActiveView}
             isCollapsed={isSidebarCollapsed}
+            onToggle={() => setIsSidebarCollapsed(v => !v)}
           />
 
           <main className="flex-1 flex flex-col relative overflow-hidden shell-hero-glow">

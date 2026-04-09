@@ -150,20 +150,6 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
     <header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full shell-surface shell-border-b">
       {/* Sidebar Toggle + Logo */}
       <div className="flex items-center gap-3">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onToggleSidebarCollapse}
-              className="h-8 w-8 shell-icon-btn"
-            >
-              <AnimatedToggle isOpen={!isSidebarCollapsed} direction="horizontal" size={18} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>{isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}</TooltipContent>
-        </Tooltip>
-        
         <div className="text-3xl font-bold shell-text">
           sturij
         </div>

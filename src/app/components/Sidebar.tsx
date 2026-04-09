@@ -1,4 +1,5 @@
 import { MessageSquare, TrendingUp, FileText, Calendar, Brain } from 'lucide-react';
+import { AnimatedToggle } from './icons/CollapseIcons';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import { motion } from 'motion/react';
 
@@ -13,9 +14,10 @@ interface SidebarProps {
   activeView: string;
   onNavigate?: (view: string) => void;
   isCollapsed?: boolean;
+  onToggle?: () => void;
 }
 
-export function Sidebar({ activeView, onNavigate, isCollapsed = false }: SidebarProps) {
+export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle }: SidebarProps) {
   const navItems: NavItem[] = [
     { icon: MessageSquare, label: 'Canvas', active: activeView === 'Canvas' },
     { icon: TrendingUp, label: 'Pipeline', active: activeView === 'Pipeline' },
@@ -36,8 +38,18 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
         transition: 'width 0.3s ease',
       }}
     >
+      {/* Collapse Toggle */}
+      <div className="flex justify-center py-3">
+        <button
+          onClick={onToggle}
+          className="w-full flex justify-center shell-icon shell-icon-btn py-3 border-none cursor-pointer bg-transparent"
+        >
+          <AnimatedToggle isOpen={!isCollapsed} direction="horizontal" size={22} />
+        </button>
+      </div>
+
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: '24px 8px 8px', overflow: 'hidden' }}>
+      <nav style={{ flex: 1, padding: '8px 8px 8px', overflow: 'hidden' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: isCollapsed ? 'center' : 'stretch' }}>
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -54,7 +66,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                           : 'shell-icon hover:bg-[var(--shell-border)]'
                       }`}
                     >
-                      <Icon className="w-5 h-5" strokeWidth={1.5} />
+                      <Icon className="w-7 h-7" strokeWidth={1.5} />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="right">{item.label}</TooltipContent>
@@ -72,7 +84,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false }: Sidebar
                     : 'shell-icon font-normal hover:bg-[var(--shell-border)]'
                 }`}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                <Icon className="w-7 h-7 flex-shrink-0" strokeWidth={1.5} />
                 <motion.span
                   initial={false}
                   animate={{ opacity: isCollapsed ? 0 : 1 }}

@@ -56,7 +56,7 @@ export default function App() {
       title: 'Knowledge',
       badge: 'AI',
       badgeColor: 'bg-purple-900/40 text-purple-300',
-      icon: <Brain className="w-4 h-4 text-purple-400" />,
+      icon: <Brain className="w-4 h-4 shell-icon" strokeWidth={1.5} />,
       isExpanded: false,
       content: (
         <div className="text-sm text-gray-400 p-2">

@@ -102,6 +102,8 @@ export default function App() {
           onToggleArtifactView={() => {}}
           isSidebarCollapsed={isSidebarCollapsed}
           onToggleSidebarCollapse={() => setIsSidebarCollapsed(v => !v)}
+          isPanelCollapsed={isPanelCollapsed}
+          onTogglePanelCollapse={() => setIsPanelCollapsed(v => !v)}
         />
 
         <div className="flex flex-1 overflow-hidden">

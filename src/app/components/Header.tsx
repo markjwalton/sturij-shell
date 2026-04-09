@@ -1,4 +1,5 @@
 import { Search, Sun, Moon, User, CreditCard, FileText, LogOut, Shield, Palette, Zap, Database, Key, Mail, Users, BarChart3, Code, Plug, Webhook, X, AlertCircle, Clock, CheckCircle, Settings } from 'lucide-react';
+import logoWhite from '../../assets/logo-white.png';
 import { AnimatedToggle } from './icons/CollapseIcons';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -150,9 +151,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
     <header className="h-16 flex items-center justify-between px-6 relative z-[110] w-full shell-surface shell-border-b">
       {/* Sidebar Toggle + Logo */}
       <div className="flex items-center gap-3">
-        <div className="text-3xl font-bold shell-text">
-          sturij
-        </div>
+        <img src={logoWhite} alt="Sturij" className="h-12 w-auto" />
       </div>
       
       {/* Navigation - Aligned with content below */}

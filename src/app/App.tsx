@@ -10,6 +10,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { useIsMobileOrTablet } from './hooks/useMediaQuery';
 import { MobileAppShell } from './components/MobileAppShell';
 import { LayoutDashboard, TrendingUp, Brain, Users } from 'lucide-react';
+import logoWatermark from '../assets/logo-white.png';
 
 interface Message {
   id: string;
@@ -115,6 +116,12 @@ export default function App() {
           />
 
           <main className="flex-1 flex flex-col relative overflow-hidden shell-hero-glow">
+            <img 
+              src={logoWatermark} 
+              alt="" 
+              aria-hidden="true"
+              className="shell-watermark"
+            />
             <AnimatedBackground />
 
             <div className="flex-1 overflow-y-auto relative z-10">

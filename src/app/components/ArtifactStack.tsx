@@ -102,7 +102,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
           initial={{ width: 420 }}
           animate={{ width: 64 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col shell-surface shell-border-l"
+          className="fixed right-0 top-16 bottom-0 z-50 flex flex-col shell-surface shell-border-l"
         >
           {/* Collapsed Artifact Navigation */}
           <div className="flex-1 overflow-y-auto p-2 pt-6">
@@ -137,7 +137,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         initial={false}
         animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-col relative shell-surface shell-border-l"
+        className="fixed right-0 top-16 bottom-0 z-50 flex flex-col relative shell-surface shell-border-l"
       >
         {/* Stacked Artifact Cards */}
         <div className="flex-1 overflow-y-auto p-4 pt-6">

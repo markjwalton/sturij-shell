@@ -15,8 +15,8 @@ export function ChatMessage({ message, timestamp, actions }: ChatMessageProps) {
       transition={{ duration: 0.4 }}
       className="flex gap-4 mb-4"
     >
-      <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center flex-shrink-0 shadow-md">
-        <Sparkles className="w-5 h-5 text-[var(--shell-background)]" />
+      <div className="w-10 h-10 rounded-full shell-avatar flex items-center justify-center flex-shrink-0 shadow-md">
+        <Sparkles className="w-5 h-5" strokeWidth={1.5} />
       </div>
       <div className="flex-1 min-w-0">
         <div className="rounded-2xl p-5 shadow-sm shell-surface shell-border">

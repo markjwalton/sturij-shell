@@ -1,8 +1,6 @@
 import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GripVertical, Layers } from 'lucide-react';
-import { AnimatedToggle } from './icons/CollapseIcons';
-import { Button } from './ui/button';
+import { Layers } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 
 interface ArtifactCard {
@@ -31,9 +29,7 @@ export interface ArtifactStackHandle {
 export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>(
   ({ artifacts: initialArtifacts, onReorder, isCollapsed = false, onToggleCollapse }, ref) => {
     const [artifacts, setArtifacts] = useState(initialArtifacts);
-    const [draggedCard, setDraggedCard] = useState<string | null>(null);
 
-    // Sync content from parent while preserving local expansion/order state
     useEffect(() => {
       setArtifacts(prev =>
         prev.map(card => {
@@ -62,39 +58,11 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
       setArtifacts(prev => prev.map(card => ({ ...card, isExpanded: false })));
     };
 
-    // Expose methods to parent component
     useImperativeHandle(ref, () => ({
       expandAll,
       collapseAll,
-      toggleCollapse: () => {}, // No longer needed - controlled by parent
+      toggleCollapse: () => {},
     }));
-
-    const handleDragStart = (e: React.DragEvent, cardId: string) => {
-      setDraggedCard(cardId);
-      e.dataTransfer.effectAllowed = 'move';
-    };
-
-    const handleDragOver = (e: React.DragEvent) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-    };
-
-    const handleDrop = (e: React.DragEvent, targetCardId: string) => {
-      e.preventDefault();
-
-      if (!draggedCard || draggedCard === targetCardId) return;
-
-      const draggedIndex = artifacts.findIndex(card => card.id === draggedCard);
-      const targetIndex = artifacts.findIndex(card => card.id === targetCardId);
-
-      const newArtifacts = [...artifacts];
-      const [removed] = newArtifacts.splice(draggedIndex, 1);
-      newArtifacts.splice(targetIndex, 0, removed);
-
-      setArtifacts(newArtifacts);
-      onReorder?.(newArtifacts);
-      setDraggedCard(null);
-    };
 
     if (isCollapsed) {
       return (
@@ -106,41 +74,27 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         >
           <div className="shell-accent-rule-v" />
           <div className="flex-1 flex flex-col">
-          {/* Panel toggle */}
-          <div className="flex items-center justify-center py-3">
-            <button onClick={onToggleCollapse} className="w-12 h-12 flex items-center justify-center shell-accent-text shell-icon-btn">
-              <AnimatedToggle isOpen={false} direction="horizontal" size={28} />
-            </button>
-          </div>
-          {/* Collapsed Artifact Navigation */}
-          <div className="flex-1 overflow-y-auto p-2 pt-0">
-            <div className="space-y-2 flex flex-col items-center">
-              {artifacts.map((artifact) => (
-                <Tooltip key={artifact.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      className={`w-12 h-12 flex items-center justify-center rounded-lg transition-all ${
-                        artifact.isExpanded 
-                          ? 'shell-nav-active shell-nav-active-text' 
-                          : 'shell-icon hover:bg-[var(--shell-border)] hover:shadow-sm border border-transparent hover:border-[var(--shell-border)]'
-                      } relative`}
-                    >
-                      <span className="shell-icon">{artifact.icon || <Layers className="w-5 h-5" strokeWidth={1.5} />}</span>
-                      <GripVertical className="w-3 h-3 shell-icon absolute right-0.5 top-1/2 -translate-y-1/2 opacity-50" strokeWidth={1.5} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="left">
-                    <div className="text-xs">
-                      <div className="font-medium">{artifact.title}</div>
-                      {artifact.badge && (
-                        <div className="shell-text-muted mt-0.5">{artifact.badge}</div>
-                      )}
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
+            <div className="flex-1 overflow-y-auto p-2">
+              <div className="flex flex-col gap-1 items-center">
+                {artifacts.map((artifact) => (
+                  <Tooltip key={artifact.id}>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => toggleCardExpansion(artifact.id)}
+                        className={`w-12 h-12 flex items-center justify-center rounded-lg border-none cursor-pointer transition-all ${
+                          artifact.isExpanded
+                            ? 'shell-nav-active shell-nav-active-text'
+                            : 'shell-icon hover:bg-[var(--shell-border)]'
+                        }`}
+                      >
+                        {artifact.icon || <Layers className="w-7 h-7" strokeWidth={1.5} />}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">{artifact.title}</TooltipContent>
+                  </Tooltip>
+                ))}
+              </div>
             </div>
-          </div>
           </div>
         </motion.aside>
       );
@@ -155,79 +109,43 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
       >
         <div className="shell-accent-rule-v" />
         <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Panel toggle */}
-        <div className="flex items-center px-4 py-3">
-          <button onClick={onToggleCollapse} className="w-12 h-12 flex items-center justify-center shell-accent-text shell-icon-btn">
-            <AnimatedToggle isOpen={true} direction="horizontal" size={28} />
-          </button>
-        </div>
-        {/* Stacked Artifact Cards */}
-        <div className="flex-1 overflow-y-auto px-4 pt-0 pb-4">
-          <div className="space-y-3">
-            {artifacts.map((artifact, index) => (
-              <motion.div
-                key={artifact.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                draggable
-                onDragStart={(e) => handleDragStart(e, artifact.id)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, artifact.id)}
-                className={`rounded-lg shadow-sm transition-all hover:shadow-md ${
-                  artifact.isExpanded 
-                    ? 'shell-nav-active shell-nav-active-text' 
-                    : 'shell-bg shell-border'
-                } ${draggedCard === artifact.id ? 'opacity-50 scale-95' : 'opacity-100'}`}
-              >
-                {/* Card Header */}
-                <div className="p-3 flex items-center gap-3 cursor-move hover:bg-[var(--shell-border)] transition-colors">
-                  <GripVertical className="w-5 h-5 shell-icon flex-shrink-0" strokeWidth={1.5} />
-                  <div className="flex-1 min-w-0 flex items-center gap-2">
-                    <span className="shell-icon">{artifact.icon}</span>
-                    <h3 className={`text-base font-medium truncate ${artifact.isExpanded ? 'shell-nav-active-text' : 'shell-text'}`}>{artifact.title}</h3>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    {artifact.badge && (
-                      <span className="text-xs px-1.5 py-0.5 rounded shell-surface shell-border shell-text-muted">
-                        {artifact.badge}
-                      </span>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleCardExpansion(artifact.id)}
-                      className="h-7 w-7 hover:bg-[var(--shell-border)] flex-shrink-0"
-                    >
-                      {artifact.isExpanded ? (
-                        <AnimatedToggle isOpen={true} direction="vertical" size={14} />
-                                              ) : (
-                        <AnimatedToggle isOpen={false} direction="vertical" size={14} />
-                      )}
-                    </Button>
-                  </div>
-                </div>
+          <div className="flex-1 overflow-y-auto p-2">
+            <div className="flex flex-col gap-1">
+              {artifacts.map((artifact) => (
+                <div key={artifact.id}>
+                  <button
+                    onClick={() => toggleCardExpansion(artifact.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all ${
+                      artifact.isExpanded
+                        ? 'shell-nav-active shell-nav-active-text font-medium'
+                        : 'shell-text-muted font-normal hover:bg-[var(--shell-border)]'
+                    }`}
+                  >
+                    <span className="flex-shrink-0">
+                      {artifact.icon || <Layers className="w-7 h-7" strokeWidth={1.5} />}
+                    </span>
+                    <span className="whitespace-nowrap text-base truncate">{artifact.title}</span>
+                  </button>
 
-                {/* Card Content */}
-                <AnimatePresence>
-                  {artifact.isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden shell-border-t"
-                    >
-                      <div className="p-3">
-                        {artifact.content}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+                  <AnimatePresence>
+                    {artifact.isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-3 shell-bg">
+                          {artifact.content}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </motion.aside>
     );

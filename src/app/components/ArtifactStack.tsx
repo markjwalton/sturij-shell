@@ -138,7 +138,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         initial={false}
         animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
-        className="fixed right-0 top-[65px] bottom-24 z-50 flex flex-col relative shell-surface shell-panel-depth shell-border-l"
+        className="fixed right-0 top-[65px] bottom-24 z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
       >
         {/* Stacked Artifact Cards */}
         <div className="flex-1 overflow-y-auto p-4 pt-2">

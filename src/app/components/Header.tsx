@@ -218,7 +218,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           {showSettingsMenu && (
             <div className="fixed right-4 top-16 w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden shell-surface shell-border">
               <div className="p-6 shell-border-b">
-                <h3 className="font-medium text-lg shell-text">System Settings</h3>
+                <h3 className="font-medium text-lg shell-text-muted">System Settings</h3>
                 <p className="text-sm shell-text-muted mt-1">Configure your workspace and tools</p>
               </div>
               
@@ -229,7 +229,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <User className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Profile Settings</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Profile Settings</h4>
                       <p className="text-xs shell-text-muted">Manage your account details and preferences</p>
                     </div>
                   </div>
@@ -241,7 +241,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Shield className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Security & Privacy</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Security & Privacy</h4>
                       <p className="text-xs shell-text-muted">2FA, passwords, and access control</p>
                     </div>
                   </div>
@@ -253,7 +253,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Users className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Team Management</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Team Management</h4>
                       <p className="text-xs shell-text-muted">Invite members, roles, and permissions</p>
                     </div>
                   </div>
@@ -265,7 +265,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Palette className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Appearance</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Appearance</h4>
                       <p className="text-xs shell-text-muted">Themes, colors, and display options</p>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Database className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Data Management</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Data Management</h4>
                       <p className="text-xs shell-text-muted">Import, export, and backup your data</p>
                     </div>
                   </div>
@@ -289,7 +289,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Zap className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">AI Skills & Training</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">AI Skills & Training</h4>
                       <p className="text-xs shell-text-muted">Configure AI behavior and custom skills</p>
                     </div>
                   </div>
@@ -301,7 +301,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Plug className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Integrations</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Integrations</h4>
                       <p className="text-xs shell-text-muted">Connect third-party apps and services</p>
                     </div>
                   </div>
@@ -313,7 +313,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Key className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">API Keys</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">API Keys</h4>
                       <p className="text-xs shell-text-muted">Manage developer access tokens</p>
                     </div>
                   </div>
@@ -325,7 +325,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Webhook className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Webhooks</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Webhooks</h4>
                       <p className="text-xs shell-text-muted">Set up real-time event notifications</p>
                     </div>
                   </div>
@@ -337,7 +337,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Mail className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Notifications</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Notifications</h4>
                       <p className="text-xs shell-text-muted">Email, SMS, and in-app alerts</p>
                     </div>
                   </div>
@@ -349,7 +349,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <BarChart3 className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Analytics & Reports</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Analytics & Reports</h4>
                       <p className="text-xs shell-text-muted">Track usage, insights, and metrics</p>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                       <Code className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium shell-text mb-1">Developer Tools</h4>
+                      <h4 className="font-medium shell-text-muted mb-1">Developer Tools</h4>
                       <p className="text-xs shell-text-muted">API docs, sandbox, and debugging</p>
                     </div>
                   </div>

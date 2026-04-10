@@ -102,10 +102,16 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
           initial={{ width: 420 }}
           animate={{ width: 64 }}
           transition={{ duration: 0.3 }}
-          className="fixed right-0 top-[65px] bottom-24 z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
+          className="fixed right-0 top-[65px] bottom-[97px] z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
         >
+          {/* Panel toggle */}
+          <div className="flex items-center justify-center py-3">
+            <button onClick={onToggleCollapse} className="w-12 h-12 flex items-center justify-center shell-accent-text shell-icon-btn">
+              <AnimatedToggle isOpen={false} direction="horizontal" size={28} />
+            </button>
+          </div>
           {/* Collapsed Artifact Navigation */}
-          <div className="flex-1 overflow-y-auto p-2">
+          <div className="flex-1 overflow-y-auto p-2 pt-0">
             <div className="space-y-2 flex flex-col items-center">
               {artifacts.map((artifact) => (
                 <Tooltip key={artifact.id}>
@@ -138,10 +144,16 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
         initial={false}
         animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
-        className="fixed right-0 top-[65px] bottom-24 z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
+        className="fixed right-0 top-[65px] bottom-[97px] z-50 flex flex-col shell-surface shell-panel-depth shell-border-l"
       >
+        {/* Panel toggle */}
+        <div className="flex items-center px-4 py-3">
+          <button onClick={onToggleCollapse} className="w-12 h-12 flex items-center justify-center shell-accent-text shell-icon-btn">
+            <AnimatedToggle isOpen={true} direction="horizontal" size={28} />
+          </button>
+        </div>
         {/* Stacked Artifact Cards */}
-        <div className="flex-1 overflow-y-auto p-4 pt-2">
+        <div className="flex-1 overflow-y-auto px-4 pt-0 pb-4">
           <div className="space-y-3">
             {artifacts.map((artifact, index) => (
               <motion.div

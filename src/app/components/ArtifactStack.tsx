@@ -67,7 +67,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
     if (isCollapsed) {
       return (
         <motion.aside
-          initial={{ width: 320 }}
+          initial={{ width: 420 }}
           animate={{ width: 64 }}
           transition={{ duration: 0.3 }}
           className="fixed right-0 top-[65px] bottom-[97px] z-50 flex flex-row shell-surface shell-panel-depth"
@@ -103,7 +103,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
     return (
       <motion.aside
         initial={false}
-        animate={{ width: 320 }}
+        animate={{ width: 420 }}
         transition={{ duration: 0.3 }}
         className="fixed right-0 top-[65px] bottom-[97px] z-50 flex flex-row shell-surface shell-panel-depth"
       >

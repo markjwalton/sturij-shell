@@ -19,7 +19,7 @@ export function ChatMessage({ message, timestamp, actions }: ChatMessageProps) {
         <Sparkles className="w-5 h-5" strokeWidth={1.5} />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="rounded-2xl p-5 shadow-sm bg-transparent">
+        <div className="rounded-2xl p-5 shadow-sm shell-surface shell-border">
           <div
             className="leading-relaxed text-sm shell-text"
             dangerouslySetInnerHTML={{ __html: message }}

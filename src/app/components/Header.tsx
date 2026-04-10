@@ -207,9 +207,9 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setShowSettingsMenu(!showSettingsMenu)}
-                className="h-10 w-10 shell-icon-btn"
+                className="h-10 w-10 shell-text-muted shell-icon-btn"
               >
-                <Settings className="w-7 h-7" strokeWidth={1.5} />
+                <Settings className="w-8 h-8" strokeWidth={1.5} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Settings</TooltipContent>

@@ -36,9 +36,9 @@ export default function App() {
   const artifactStackRef = useRef<ArtifactStackHandle>(null);
 
   const artifacts = [
-    { id: '1', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
-    { id: '2', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
-    { id: '3', title: '', badge: undefined, icon: undefined, content: null, isExpanded: false },
+    { id: '1', title: 'Artifact', badge: undefined, icon: undefined, content: null, isExpanded: false },
+    { id: '2', title: 'Artifact', badge: undefined, icon: undefined, content: null, isExpanded: false },
+    { id: '3', title: 'Artifact', badge: undefined, icon: undefined, content: null, isExpanded: false },
   ];
 
   const handleSendMessage = (content: string) => {

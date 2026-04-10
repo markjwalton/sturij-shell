@@ -96,7 +96,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
                   initial={false}
                   animate={{ opacity: isCollapsed ? 0 : 1 }}
                   transition={{ duration: 0.2 }}
-                  className="whitespace-nowrap"
+                  className="whitespace-nowrap text-base"
                 >
                   {item.label}
                 </motion.span>

@@ -154,9 +154,9 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
       <div className="flex items-center gap-3">
         <div className="flex items-center h-full">
           {isSidebarCollapsed ? (
-            <img src={logoIcon} alt="Sturij" className="h-12 w-12" />
+            <img src={logoIcon} alt="Sturij" className="h-7 w-7" />
           ) : (
-            <img src={logoWhite} alt="Sturij" className="h-12 w-auto" />
+            <img src={logoWhite} alt="Sturij" className="h-10 w-auto" />
           )}
         </div>
       </div>
@@ -207,7 +207,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
                 variant="ghost" 
                 size="icon" 
                 onClick={() => setShowSettingsMenu(!showSettingsMenu)}
-                className="h-10 w-10 shell-text-muted shell-icon-btn"
+                className={`h-10 w-10 ${showSettingsMenu ? 'shell-accent-text' : 'shell-text-muted'} shell-icon-btn`}
               >
                 <Settings className="w-8 h-8" strokeWidth={1.5} />
               </Button>
@@ -216,16 +216,16 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           </Tooltip>
           
           {showSettingsMenu && (
-            <div className="fixed right-4 top-16 w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden shell-surface shell-border">
+            <div className="fixed right-4 top-[65px] w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden shell-surface shell-border">
               <div className="p-6 shell-border-b">
-                <h3 className="font-medium text-lg shell-text-muted">System Settings</h3>
+                <h3 className="font-medium text-lg shell-accent-text">System Settings</h3>
                 <p className="text-sm shell-text-muted mt-1">Configure your workspace and tools</p>
               </div>
               
               <div className="grid grid-cols-2 gap-px shell-bg">
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <User className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -237,7 +237,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Shield className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -249,7 +249,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Users className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -261,7 +261,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Palette className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -273,7 +273,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Database className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -285,7 +285,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Zap className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -297,7 +297,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Plug className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -309,7 +309,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Key className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -321,7 +321,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Webhook className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -333,7 +333,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Mail className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -345,7 +345,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <BarChart3 className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -357,7 +357,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
 
                 <button className="p-4 shell-bg hover:bg-[var(--shell-border)] transition-colors text-left group">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg shell-surface shell-border group-hover:shell-accent-text transition-all">
+                    <div className="p-2 rounded-lg shell-avatar group-hover:shell-accent-text transition-all">
                       <Code className="w-5 h-5 shell-icon" strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
@@ -387,7 +387,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           </button>
 
           {showUserMenu && (
-            <div className="fixed right-4 top-16 w-72 rounded-xl shadow-xl z-[200] overflow-hidden shell-surface shell-border">
+            <div className="fixed right-4 top-[65px] w-72 rounded-xl shadow-xl z-[200] overflow-hidden shell-surface shell-border">
               <div className="p-3 shell-border-b">
                 <p className="font-medium shell-text">{userName}</p>
                 <p className="text-xs shell-text-muted mt-0.5">user@sturij.ai</p>

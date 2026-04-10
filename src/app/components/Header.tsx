@@ -218,7 +218,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
           {showSettingsMenu && (
             <div className="fixed right-4 top-16 w-[680px] rounded-xl shadow-2xl z-[200] overflow-hidden shell-surface shell-border">
               <div className="p-6 shell-border-b">
-                <h3 className="font-semibold text-lg shell-text">System Settings</h3>
+                <h3 className="font-medium text-lg shell-text">System Settings</h3>
                 <p className="text-sm shell-text-muted mt-1">Configure your workspace and tools</p>
               </div>
               
@@ -397,7 +397,7 @@ export function Header({ userName, userInitials, artifactViewMode, onToggleArtif
               {notifications.length > 0 && (
                 <div className="shell-border-b">
                   <div className="px-4 py-2 flex items-center justify-between">
-                    <span className="text-xs font-semibold shell-text-muted uppercase tracking-wider">Notifications</span>
+                    <span className="text-xs font-medium shell-text-muted uppercase tracking-wider">Notifications</span>
                     <span className="text-xs shell-accent-text font-medium">{unreadCount} new</span>
                   </div>
                   <div className="max-h-48 overflow-y-auto">

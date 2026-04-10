@@ -119,7 +119,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                   </TooltipTrigger>
                   <TooltipContent side="left">
                     <div className="text-xs">
-                      <div className="font-semibold">{artifact.title}</div>
+                      <div className="font-medium">{artifact.title}</div>
                       {artifact.badge && (
                         <div className="shell-text-muted mt-0.5">{artifact.badge}</div>
                       )}
@@ -162,7 +162,7 @@ export const ArtifactStack = forwardRef<ArtifactStackHandle, ArtifactStackProps>
                   <GripVertical className="w-5 h-5 shell-icon flex-shrink-0" strokeWidth={1.5} />
                   <div className="flex-1 min-w-0 flex items-center gap-2">
                     <span className="shell-icon">{artifact.icon}</span>
-                    <h3 className="font-semibold text-sm shell-text truncate">{artifact.title}</h3>
+                    <h3 className="font-medium text-sm shell-text truncate">{artifact.title}</h3>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {artifact.badge && (

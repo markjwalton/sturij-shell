@@ -87,7 +87,7 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
                 onClick={() => onNavigate?.(item.label)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg border-none cursor-pointer text-left text-sm transition-all ${
                   item.active
-                    ? 'shell-nav-active shell-nav-active-text font-semibold'
+                    ? 'shell-nav-active shell-nav-active-text font-medium'
                     : 'shell-icon font-normal hover:bg-[var(--shell-border)]'
                 }`}
               >

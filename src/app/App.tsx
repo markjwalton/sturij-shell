@@ -57,7 +57,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-screen shell-bg shell-text">
+      <div className="flex flex-col h-dvh shell-bg shell-text">
         <Header
           userName="Mark"
           userInitials="MW"
@@ -77,7 +77,7 @@ export default function App() {
             onToggle={() => setIsSidebarCollapsed(v => !v)}
           />
 
-          <main className={`flex-1 flex flex-col relative overflow-hidden shell-hero-glow transition-all duration-300 ${isPanelCollapsed ? 'pr-16' : 'pr-[420px]'}`}>
+          <main className="flex-1 flex flex-col relative overflow-hidden shell-hero-glow">
             <img 
               src={logoWatermark} 
               alt="" 

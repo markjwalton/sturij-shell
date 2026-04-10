@@ -44,39 +44,24 @@ export function AnimatedBackground() {
     >
       {/* Subtle noise texture overlay */}
       <div 
-        className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           backgroundRepeat: 'repeat',
         }}
       />
       
-      {/* Mouse-following glow - Light mode */}
+      {/* Mouse-following glow — single layer, works for both themes */}
       <div
-        className="absolute inset-0 pointer-events-none dark:opacity-0 transition-opacity duration-300"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
         style={{
           opacity: 'var(--glow-opacity)',
           background: `radial-gradient(600px circle at var(--x) var(--y), 
-            rgba(74, 222, 128, 0.03), 
-            rgba(59, 130, 246, 0.02) 30%, 
-            rgba(147, 51, 234, 0.015) 55%, 
+            rgba(74, 222, 128, 0.06), 
+            rgba(59, 130, 246, 0.04) 30%, 
+            rgba(147, 51, 234, 0.025) 55%, 
             transparent 70%)`,
           willChange: 'opacity',
-        }}
-      />
-
-      {/* Mouse-following glow - Dark mode enhanced */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-100 transition-opacity duration-100"
-        style={{
-          opacity: 'calc(var(--glow-opacity) * 1)',
-          background: `radial-gradient(650px circle at var(--x) var(--y), 
-            rgba(74, 222, 128, 0.08), 
-            rgba(59, 130, 246, 0.06) 30%, 
-            rgba(147, 51, 234, 0.04) 55%, 
-            transparent 70%)`,
-          willChange: 'opacity',
-          mixBlendMode: 'screen',
         }}
       />
     </div>

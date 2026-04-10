@@ -33,7 +33,7 @@ export function UserMessage({ message, timestamp, userInitials }: UserMessagePro
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
-        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md font-semibold text-sm shell-accent-bg"
+        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md font-medium text-sm shell-accent-bg"
       >
         {userInitials}
       </motion.div>

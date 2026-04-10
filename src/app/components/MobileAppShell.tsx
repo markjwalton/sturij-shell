@@ -204,7 +204,7 @@ function WorkflowStepCard({ step, isOpen, onToggle, activeChip, onChipClick }: W
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: 'spring', stiffness: 500, damping: 28 }}
                       onClick={() => onChipClick(step.number, btn.label)}
-                      className="px-3 py-1.5 font-mono text-xs text-white"
+                      className="px-3 py-1.5 font-mono text-xs shell-text"
                       style={{
                         background: chipBg(btn.color, isActive),
                         border: `1px solid ${chipBorder(btn.color)}`,
@@ -655,7 +655,7 @@ export function MobileAppShell({
                       className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{ background: C.tealSolid }}
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-white" />
+                      <Sparkles className="w-3.5 h-3.5 shell-text" />
                     </div>
                     <div className="max-w-[80%]">
                       <div
@@ -725,7 +725,7 @@ export function MobileAppShell({
               }}
               aria-label="Send"
             >
-              <Send className="w-3.5 h-3.5 text-white" />
+              <Send className="w-3.5 h-3.5 shell-text" />
             </motion.button>
           </div>
 
@@ -884,7 +884,7 @@ export function MobileAppShell({
               style={{ background: C.tealSolid, boxShadow: '0 4px 16px rgba(13,148,136,0.5)' }}
               aria-label="Open chat"
             >
-              <Sparkles className="w-5 h-5 text-white" />
+              <Sparkles className="w-5 h-5 shell-text" />
             </motion.button>
           )}
         </AnimatePresence>
@@ -914,7 +914,7 @@ export function MobileAppShell({
                   className="w-6 h-6 rounded-full flex items-center justify-center mr-2.5 flex-shrink-0"
                   style={{ background: C.tealSolid }}
                 >
-                  <Sparkles className="w-3 h-3 text-white" />
+                  <Sparkles className="w-3 h-3 shell-text" />
                 </div>
                 <span className="font-mono text-xs tracking-widest flex-1" style={{ color: C.text }}>
                   CNC Nesting Assistant
@@ -945,7 +945,7 @@ export function MobileAppShell({
                   ) : (
                     <div key={msg.id} className="flex gap-2">
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: C.tealSolid }}>
-                        <Sparkles className="w-3 h-3 text-white" />
+                        <Sparkles className="w-3 h-3 shell-text" />
                       </div>
                       <div
                         className="px-3 py-2 font-mono text-xs max-w-[80%]"
@@ -981,7 +981,7 @@ export function MobileAppShell({
                     className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: inputValue.trim() ? C.tealSolid : 'rgba(13,148,136,0.25)' }}
                   >
-                    <Send className="w-3 h-3 text-white" />
+                    <Send className="w-3 h-3 shell-text" />
                   </motion.button>
                 </div>
               </div>

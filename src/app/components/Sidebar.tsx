@@ -28,9 +28,10 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
 
   return (
     <aside
-      className="shell-panel-depth shell-border-r flex flex-col shrink-0 transition-[width] duration-300 ease-in-out"
+      className="shell-panel-depth flex shrink-0 transition-[width] duration-300 ease-in-out"
       style={{ width: isCollapsed ? '64px' : '240px' }}
     >
+      <div className="flex-1 flex flex-col overflow-hidden">
       {/* Collapse Toggle */}
       <nav className="flex-1 p-2 overflow-hidden">
         <div className={`flex flex-col mb-1 ${isCollapsed ? 'items-center' : 'items-stretch'}`}>
@@ -105,6 +106,8 @@ export function Sidebar({ activeView, onNavigate, isCollapsed = false, onToggle 
           })}
         </div>
       </nav>
+      </div>
+      <div className="shell-accent-rule-v" />
     </aside>
   );
 }
